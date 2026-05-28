@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>SKPM Pro — Sistem Kualiti Sekolah</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"></script>
+<style>
+:root{
+--ink:#0D0D14;--ink2:#1C1C2E;--ink3:#2D2D42;
+--paper:#FAFAFA;--cream:#F2F2F0;--smoke:#E8E8E5;
+--muted:#8888A0;--border:rgba(0,0,0,.07);
+--v:#5B21B6;--v2:#7C3AED;--v3:#A78BFA;--vb:#F5F0FF;
+--b:#1048A8;--b2:#2563EB;--b3:#93C5FD;--bb:#EFF6FF;
+--g:#065F46;--g2:#059669;--g3:#6EE7B7;--gb:#ECFDF5;
+--a:#92400E;--a2:#D97706;--a3:#FDE68A;--ab:#FFFBEB;
+--r:#991B1B;--r2:#DC2626;--r3:#FCA5A5;--rb:#FFF5F5;
+--gold:#F59E0B;
+--sh0:0 1px 3px rgba(0,0,0,.05);
+--sh1:0 4px 20px rgba(0,0,0,.07);
+--sh2:0 12px 40px rgba(0,0,0,.1);
+--sh3:0 24px 64px rgba(0,0,0,.14);
+--rad:18px;--rad-sm:11px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:'Outfit',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* grain overlay */
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEWFhYWDg4N3d3dtbW17e3t1dXVpaWlzc3NnZ2dycnJra2t4eHhxcXF2dnZqamplZWVjY2N0dHRiYmJubm5oaGl+fn57e3traWp/f3+AgIB7endxaGMXAAAAG3RSTlNAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAvEOwtAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAHUlEQVQ4y2NgaGBg+P//PwMDgwEIUBMAAAAAAP//AwAIBAEAiTtHKwAAAABJRU5ErkJggg==");opacity:.025;pointer-events:none;z-index:9999;mix-blend-mode:multiply}
+
+/* ═══ LOGIN ═══ */
+.login-overlay{position:fixed;inset:0;z-index:8888;display:flex;align-items:center;justify-content:center;padding:1rem;background:var(--ink);background-image:radial-gradient(ellipse 100% 100% at 10% 0%,rgba(91,33,182,.5) 0%,transparent 55%),radial-gradient(ellipse 80% 80% at 90% 100%,rgba(16,72,168,.4) 0%,transparent 55%)}
+.login-overlay.gone{display:none}
+.login-box{background:rgba(255,255,255,.04);backdrop-filter:blur(60px);-webkit-backdrop-filter:blur(60px);border:1px solid rgba(255,255,255,.1);border-radius:28px;padding:2.75rem 2.25rem;width:100%;max-width:400px;box-shadow:0 40px 120px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.12);animation:boxIn .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes boxIn{from{opacity:0;transform:translateY(28px)scale(.95)}to{opacity:1;transform:none}}
+.lb-icon{width:60px;height:60px;margin:0 auto 1.25rem;background:linear-gradient(135deg,var(--v),var(--b2));border-radius:17px;display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 10px 30px rgba(91,33,182,.5)}
+.lb-brand{text-align:center;margin-bottom:2rem}
+.lb-title{font-size:24px;font-weight:800;color:#fff;letter-spacing:-1px}
+.lb-title em{color:var(--v3);font-style:normal}
+.lb-sub{font-size:11px;color:rgba(255,255,255,.4);letter-spacing:.09em;text-transform:uppercase;margin-top:5px}
+.lb-sn{font-size:13px;font-weight:600;color:rgba(255,255,255,.7);margin-top:6px}
+.lf-lbl{display:block;font-size:10px;font-weight:700;color:rgba(255,255,255,.38);text-transform:uppercase;letter-spacing:.09em;margin-bottom:6px}
+.lf-inp{width:100%;padding:13px 16px;border-radius:13px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.06);color:#fff;font-size:14px;font-family:'Outfit',sans-serif;outline:none;transition:.18s;margin-bottom:1rem}
+.lf-inp:focus{border-color:var(--v3);background:rgba(255,255,255,.1);box-shadow:0 0 0 3px rgba(167,139,250,.25)}
+.lf-inp.err{border-color:var(--r3);background:rgba(220,38,38,.12)}
+.lf-inp::placeholder{color:rgba(255,255,255,.2)}
+.lf-pw{position:relative;margin-bottom:1.5rem}
+.lf-pw .lf-inp{margin-bottom:0;padding-right:46px}
+.lf-eye{position:absolute;right:14px;top:14px;background:none;border:none;cursor:pointer;font-size:17px;color:rgba(255,255,255,.3)}
+.lf-err-msg{font-size:11.5px;font-weight:600;color:var(--r3);text-align:center;padding:.5rem .75rem;background:rgba(220,38,38,.15);border-radius:9px;margin-bottom:.85rem;display:none}
+.lf-submit{width:100%;padding:14px;border-radius:14px;border:none;background:linear-gradient(135deg,var(--v) 0%,var(--b2) 100%);color:#fff;font-size:15px;font-weight:800;letter-spacing:-.2px;cursor:pointer;font-family:'Outfit',sans-serif;box-shadow:0 8px 28px rgba(91,33,182,.55);transition:.2s}
+.lf-submit:hover{transform:translateY(-1.5px);box-shadow:0 14px 36px rgba(91,33,182,.65)}
+.lf-note{text-align:center;font-size:10px;color:rgba(255,255,255,.25);margin-top:1.1rem}
+
+/* ═══ HEADER ═══ */
+.hdr{background:rgba(250,250,250,.88);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);padding:.65rem 1rem;display:flex;align-items:center;gap:.65rem;position:sticky;top:0;z-index:500;box-shadow:var(--sh0)}
+.hdr-badge{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--v),var(--b2));display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;overflow:hidden;box-shadow:0 3px 10px rgba(91,33,182,.35)}
+.hdr-badge img{width:100%;height:100%;object-fit:cover;border-radius:10px;display:none}
+.hdr-brand{font-size:14px;font-weight:800;color:var(--ink);letter-spacing:-.4px;flex-shrink:0}
+.hdr-brand em{color:var(--v);font-style:normal}
+.hdr-sep{width:1px;height:20px;background:var(--border);flex-shrink:0}
+.hdr-slogo{width:28px;height:28px;border-radius:50%;border:2px solid var(--v3);object-fit:cover;flex-shrink:0;display:none}
+.hdr-slogo.show{display:block}
+.hdr-info{flex:1;min-width:0}
+.hdr-sn{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.2px}
+.hdr-sub{font-size:10px;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hdr-acts{display:flex;gap:.3rem;flex-shrink:0}
+.hbtn{font-size:10.5px;font-weight:700;padding:5px 12px;border-radius:9px;border:1px solid var(--border);background:var(--paper);color:var(--ink);cursor:pointer;font-family:'Outfit',sans-serif;white-space:nowrap;transition:.15s;letter-spacing:-.1px}
+.hbtn:hover{background:var(--vb);border-color:var(--v3);color:var(--v)}
+.hbtn.hbtn-adm{background:linear-gradient(135deg,var(--v),var(--b2));color:#fff;border:none;box-shadow:0 2px 10px rgba(91,33,182,.3)}
+.hbtn.hbtn-adm:hover{box-shadow:0 4px 16px rgba(91,33,182,.45);transform:translateY(-1px)}
+.hbtn.hbtn-out{background:var(--rb);border-color:var(--r3);color:var(--r)}
+
+/* ═══ NAV TABS ═══ */
+.tabnav{background:var(--paper);border-bottom:1px solid var(--border);display:flex;overflow-x:auto;scrollbar-width:none;position:sticky;top:60px;z-index:499;box-shadow:0 2px 8px rgba(0,0,0,.03)}
+.tabnav::-webkit-scrollbar{display:none}
+.tn{flex:1;min-width:78px;display:flex;flex-direction:column;align-items:center;padding:.55rem .3rem .45rem;cursor:pointer;border-bottom:2.5px solid transparent;transition:.15s;font-size:9.5px;font-weight:700;color:var(--muted);white-space:nowrap}
+.tn.on{color:var(--v);border-bottom-color:var(--v)}
+.tn-ic{font-size:17px;margin-bottom:2px}
+
+/* ═══ VIEW BANNER ═══ */
+.vo-bar{background:linear-gradient(90deg,#FFFBEB,#FEF9C3);border-bottom:2px solid var(--a2);padding:7px 14px;font-size:11.5px;font-weight:700;color:var(--a);text-align:center;position:sticky;top:110px;z-index:498;letter-spacing:-.1px}
+
+/* ═══ MODALS ═══ */
+.mover{display:none;position:fixed;inset:0;background:rgba(13,13,20,.65);z-index:900;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px)}
+.mover.open{display:flex}
+.msheet{background:var(--paper);border-radius:26px 26px 0 0;padding:1.5rem 1.25rem 2.5rem;width:100%;max-width:600px;max-height:93vh;overflow-y:auto;animation:shup .32s cubic-bezier(.34,1.56,.64,1);box-shadow:0 -10px 50px rgba(0,0,0,.18)}
+@keyframes shup{from{transform:translateY(100%)}to{transform:none}}
+.sh-pill{width:38px;height:4px;background:var(--smoke);border-radius:99px;margin:0 auto 1.3rem}
+.sh-title{font-size:18px;font-weight:800;color:var(--ink);margin-bottom:1.1rem;letter-spacing:-.5px}
+.msheet label{display:block;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px}
+.msheet input,.msheet select,.msheet textarea{width:100%;padding:10px 13px;border-radius:11px;border:1.5px solid var(--border);background:var(--cream);color:var(--ink);font-size:13.5px;margin-bottom:.8rem;outline:none;font-family:'Outfit',sans-serif;transition:.15s}
+.msheet input:focus,.msheet select:focus,.msheet textarea:focus{border-color:var(--v);background:#fff;box-shadow:0 0 0 3px rgba(91,33,182,.1)}
+.msheet textarea{height:65px;resize:none}
+.mbtns{display:flex;gap:.6rem;margin-top:.9rem}
+.msb{flex:1;padding:13px;border-radius:13px;font-size:14px;font-weight:700;cursor:pointer;border:none;font-family:'Outfit',sans-serif;transition:.2s}
+.msb-ok{background:linear-gradient(135deg,var(--v),var(--b2));color:#fff;box-shadow:0 4px 16px rgba(91,33,182,.35)}
+.msb-ok:hover{transform:translateY(-1px)}
+.msb-x{background:var(--cream);color:var(--muted);border:1.5px solid var(--border)}
+
+/* Logo upload ring */
+.logo-ring{width:78px;height:78px;border-radius:50%;border:2.5px dashed var(--v3);cursor:pointer;display:flex;align-items:center;justify-content:center;background:var(--vb);margin:0 auto .6rem;overflow:hidden;transition:.2s}
+.logo-ring:hover{border-color:var(--v);background:#EDE9FE}
+.logo-ring img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:none}
+.logo-hint{font-size:10px;color:var(--muted);font-weight:600;text-align:center;margin-bottom:.65rem}
+.logo-rm{font-size:10px;color:var(--r);background:none;border:none;cursor:pointer;font-weight:700;display:none;margin-bottom:.65rem}
+input[type=file].fi{display:none}
+
+/* Admin panel */
+.ap-s{background:var(--cream);border:1px solid var(--border);border-radius:14px;padding:.9rem;margin-bottom:.9rem}
+.ap-st{font-size:10px;font-weight:800;color:var(--v);text-transform:uppercase;letter-spacing:.07em;border-bottom:2px solid var(--v3);padding-bottom:.3rem;margin-bottom:.7rem}
+.urow{display:flex;align-items:center;gap:.5rem;background:var(--paper);border:1.5px solid var(--border);border-radius:11px;padding:.55rem .75rem;margin-bottom:.4rem}
+.urow.uad{border-color:var(--v3);background:var(--vb)}
+.uic{font-size:18px;flex-shrink:0}
+.uinf{flex:1;min-width:0}
+.unm{font-size:12px;font-weight:700}
+.url{font-size:10px;color:var(--muted)}
+.ubts{display:flex;gap:.3rem}
+.ubtn{font-size:10px;padding:3px 10px;border-radius:7px;border:1.5px solid;cursor:pointer;font-weight:700;font-family:'Outfit',sans-serif}
+.ubtn-e{border-color:var(--b2);color:var(--b2);background:var(--bb)}
+.ubtn-d{border-color:var(--r2);color:var(--r2);background:var(--rb)}
+.ubtn-d:disabled{opacity:.3;cursor:not-allowed}
+.rbadge{display:inline-block;font-size:9px;padding:1px 7px;border-radius:99px;font-weight:700;margin-left:5px}
+.rb-a{background:var(--vb);color:var(--v)}.rb-u{background:var(--bb);color:var(--b)}.rb-v{background:var(--gb);color:var(--g)}
+.afu-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.afu-full{grid-column:1/-1}
+.afu-col{display:flex;flex-direction:column;gap:4px}
+.afu-lbl{font-size:9.5px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.afu-inp,.afu-sel{font-size:13px;padding:8px 10px;border-radius:10px;border:1.5px solid var(--border);background:var(--paper);color:var(--ink);font-family:'Outfit',sans-serif;outline:none;width:100%;transition:.15s}
+.afu-inp:focus,.afu-sel:focus{border-color:var(--v);box-shadow:0 0 0 3px rgba(91,33,182,.1)}
+.ap-btn{width:100%;padding:11px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--v),var(--b2));color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;margin-top:.5rem;box-shadow:0 4px 14px rgba(91,33,182,.3);transition:.18s}
+.ap-btn:hover{transform:translateY(-1px)}
+.ap-cls{width:100%;padding:11px;border-radius:12px;border:1.5px solid var(--border);background:var(--cream);color:var(--muted);font-size:13px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;margin-top:.4rem}
+.ap-msg{font-size:11px;font-weight:700;text-align:center;padding:.5rem;border-radius:9px;margin-bottom:.5rem;display:none}
+.ap-ok{background:var(--gb);color:var(--g)}.ap-er{background:var(--rb);color:var(--r)}
+
+/* DL modal */
+.dlover{display:none;position:fixed;inset:0;background:rgba(13,13,20,.65);z-index:899;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px)}
+.dlover.open{display:flex}
+.dlsheet{background:var(--paper);border-radius:26px 26px 0 0;padding:1.5rem 1.25rem 2.5rem;width:100%;max-width:480px;animation:shup .3s ease;box-shadow:0 -10px 50px rgba(0,0,0,.18)}
+.dlbtns{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-top:.9rem}
+.dlb{padding:13px;border-radius:13px;font-size:13px;font-weight:700;cursor:pointer;border:none;font-family:'Outfit',sans-serif;display:flex;align-items:center;justify-content:center;gap:7px;transition:.18s;letter-spacing:-.1px}
+.dlb:hover{transform:translateY(-1.5px)}
+.dlb-png{background:linear-gradient(135deg,var(--ink2),var(--v));color:#fff;box-shadow:0 4px 14px rgba(91,33,182,.3)}
+.dlb-csv{background:linear-gradient(135deg,var(--g),var(--g2));color:#fff;box-shadow:0 4px 14px rgba(5,150,105,.25)}
+.dlb-pdf{background:linear-gradient(135deg,var(--a),var(--a2));color:#fff;box-shadow:0 4px 14px rgba(217,119,6,.25)}
+.dlb-x{background:var(--cream);color:var(--muted);border:1.5px solid var(--border)}
+
+/* ═══ MAIN ═══ */
+.main{padding:.9rem;max-width:960px;margin:0 auto;padding-bottom:90px}
+.pg{display:none;animation:pgfade .22s ease}.pg.on{display:block}
+@keyframes pgfade{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+.ph{margin-bottom:1.2rem;padding-bottom:.9rem;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem}
+.ph-l{flex:1;min-width:0}
+.ph-t{font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-.7px;line-height:1.15}
+.ph-s{font-size:12px;color:var(--muted);margin-top:4px;font-weight:500}
+.yr-sel{font-size:12px;font-weight:700;padding:7px 14px;border-radius:10px;border:1.5px solid var(--border);background:var(--paper);color:var(--v);cursor:pointer;font-family:'Outfit',sans-serif;outline:none;flex-shrink:0;box-shadow:var(--sh0);transition:.15s}
+.yr-sel:focus{border-color:var(--v);box-shadow:0 0 0 3px rgba(91,33,182,.1)}
+
+/* ═══ SCORE STRIP ═══ */
+.sstrip{display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem;margin-bottom:1.1rem}
+.scard{border-radius:var(--rad);padding:1.1rem 1.2rem;position:relative;overflow:hidden;cursor:default;transition:.22s}
+.scard:hover{transform:translateY(-3px);box-shadow:var(--sh3)!important}
+.scard::before{content:attr(data-s);position:absolute;right:-10px;bottom:-18px;font-size:86px;font-weight:900;color:rgba(255,255,255,.07);font-family:'Outfit',sans-serif;line-height:1;letter-spacing:-3px;pointer-events:none;-webkit-user-select:none}
+.sc1{background:linear-gradient(135deg,#4C1D95,#6D28D9);box-shadow:0 8px 28px rgba(76,29,149,.38)}
+.sc2{background:linear-gradient(135deg,#1E3A8A,#2563EB);box-shadow:0 8px 28px rgba(30,58,138,.35)}
+.sc3{background:linear-gradient(135deg,#064E3B,#059669);box-shadow:0 8px 28px rgba(6,78,59,.33)}
+.sc4{background:linear-gradient(135deg,#78350F,#D97706);box-shadow:0 8px 28px rgba(120,53,15,.32)}
+.sc5{background:linear-gradient(135deg,#7F1D1D,#DC2626);box-shadow:0 8px 28px rgba(127,29,29,.32)}
+.sc-lbl{font-size:9px;font-weight:700;color:rgba(255,255,255,.65);text-transform:uppercase;letter-spacing:.09em;margin-bottom:4px}
+.sc-val{font-size:30px;font-weight:900;color:#fff;letter-spacing:-1.5px;line-height:1;font-family:'JetBrains Mono',monospace}
+.sc-name{font-size:10.5px;font-weight:600;color:rgba(255,255,255,.78);margin-top:5px;line-height:1.3}
+.sc-trend{position:absolute;top:11px;right:12px;display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.sc-arrow{font-size:15px;line-height:1}
+.sc-diff{font-size:9px;font-weight:700;color:rgba(255,255,255,.7);font-family:'JetBrains Mono',monospace}
+
+/* ═══ CARDS ═══ */
+.card{background:var(--paper);border:1px solid var(--border);border-radius:var(--rad);padding:1.1rem;margin-bottom:.9rem;box-shadow:var(--sh1);transition:.2s}
+.card:hover{box-shadow:var(--sh2)}
+
+/* Section pill */
+.spill{display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .8rem;border-radius:99px;font-size:10.5px;font-weight:700;margin-bottom:.65rem;letter-spacing:-.1px}
+.sp1{background:var(--vb);color:var(--v);border:1px solid var(--v3)}
+.sp2{background:var(--bb);color:var(--b);border:1px solid var(--b3)}
+.sp3{background:var(--gb);color:var(--g);border:1px solid var(--g3)}
+.sp4{background:var(--ab);color:var(--a);border:1px solid var(--a3)}
+.sp5{background:var(--rb);color:var(--r);border:1px solid var(--r3)}
+
+/* Chart header */
+.chd{display:flex;align-items:flex-start;gap:.5rem;margin-bottom:.65rem;flex-wrap:wrap}
+.ctw{flex:1;min-width:0}
+.cttl{font-size:13.5px;font-weight:800;border:none;background:transparent;width:100%;outline:none;padding:2px 0;cursor:text;line-height:1.3;letter-spacing:-.35px;border-bottom:2px solid transparent;transition:.15s}
+.ct1{color:var(--v)}.ct1:focus{border-color:var(--v3)}
+.ct2{color:var(--b)}.ct2:focus{border-color:var(--b3)}
+.ct3{color:var(--g)}.ct3:focus{border-color:var(--g3)}
+.ct4{color:var(--a)}.ct4:focus{border-color:var(--a3)}
+.ct5{color:var(--r)}.ct5:focus{border-color:var(--r3)}
+.edit-h{font-size:9px;color:var(--muted);margin-top:2px;opacity:.58}
+.cacts{display:flex;align-items:center;gap:.3rem;flex-shrink:0;flex-wrap:wrap}
+.csel{font-size:10.5px;padding:4px 9px;border-radius:8px;border:1px solid var(--border);background:var(--cream);color:var(--muted);cursor:pointer;font-family:'Outfit',sans-serif;outline:none;font-weight:600;transition:.15s}
+.csel:focus{border-color:var(--v);color:var(--v)}
+.dlbtn{width:30px;height:30px;border-radius:9px;border:1px solid var(--border);background:var(--cream);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;transition:.15s;color:var(--muted)}
+.dlbtn:hover{background:var(--vb);border-color:var(--v3);color:var(--v)}
+
+/* Legend */
+.leg{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:9px}
+.li{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--muted);font-weight:600;background:var(--cream);padding:2px 8px;border-radius:99px;border:1px solid var(--border)}
+.ls{width:9px;height:9px;border-radius:3px;flex-shrink:0}
+.ls-l{width:16px;height:3px;border-radius:2px;flex-shrink:0}
+.ls-d{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+
+/* KPI bars */
+.kbar{margin-bottom:10px}
+.kbh{display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:4px;align-items:center}
+.kbl{font-weight:600;color:var(--ink);font-size:11px;line-height:1.3}
+.kbv{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:12px}
+.kbt{height:8px;border-radius:99px;background:var(--smoke);overflow:hidden}
+.kbf{height:8px;border-radius:99px;transition:width .65s cubic-bezier(.34,1.56,.64,1)}
+.sbadge{display:inline-flex;align-items:center;font-size:9.5px;padding:2px 9px;border-radius:99px;font-weight:700;margin-left:5px;font-family:'JetBrains Mono',monospace}
+.sb-ex{background:var(--gb);color:var(--g)}.sb-ok{background:var(--bb);color:var(--b)}.sb-w{background:var(--ab);color:var(--a)}.sb-bd{background:var(--rb);color:var(--r)}
+
+/* ═══ INPUT CARD ═══ */
+.ic{background:var(--paper);border:1px solid var(--border);border-radius:var(--rad);padding:1.1rem;margin-bottom:.9rem;box-shadow:var(--sh1)}
+.ic-t{font-size:14.5px;font-weight:800;color:var(--ink);border-left:4px solid var(--v);background:linear-gradient(90deg,var(--vb),transparent);padding:.4rem .85rem;border-radius:0 11px 11px 0;margin-bottom:.9rem;display:flex;align-items:center;gap:.4rem;letter-spacing:-.35px}
+.ic-s{font-size:10px;font-weight:800;color:var(--v);text-transform:uppercase;letter-spacing:.08em;border-bottom:2px solid var(--v3);padding-bottom:.3rem;margin:.8rem 0 .5rem;display:flex;align-items:center}
+.igrid{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem}
+.ig{display:flex;flex-direction:column;gap:4px}
+.il{font-size:10px;color:var(--muted);font-weight:700;line-height:1.35}
+.ig input{font-size:14px;padding:9px 12px;border-radius:11px;border:1.5px solid var(--border);background:var(--cream);color:var(--ink);width:100%;outline:none;font-family:'JetBrains Mono',monospace;transition:.15s;font-weight:600}
+.ig input:focus{border-color:var(--v);background:#fff;box-shadow:0 0 0 3px rgba(91,33,182,.09)}
+.ig input:disabled{opacity:.5;cursor:not-allowed;background:var(--smoke)}
+.bupd{width:100%;padding:13px;border-radius:13px;border:none;background:linear-gradient(135deg,var(--v),var(--b2));color:#fff;font-size:14px;font-weight:700;cursor:pointer;margin-top:.8rem;font-family:'Outfit',sans-serif;box-shadow:0 6px 20px rgba(91,33,182,.35);transition:.2s;display:flex;align-items:center;justify-content:center;gap:.4rem;letter-spacing:-.2px}
+.bupd:hover{transform:translateY(-1.5px);box-shadow:0 10px 30px rgba(91,33,182,.45)}
+.bupd:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+
+/* Mini metric row */
+.mmrow{display:grid;grid-template-columns:repeat(2,1fr);gap:.65rem;margin-bottom:.9rem}
+.mmc{background:var(--paper);border:1px solid var(--border);border-radius:13px;padding:.85rem;box-shadow:var(--sh0);position:relative;overflow:hidden}
+.mmc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--mc-c,var(--v))}
+.mml{font-size:9px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.mmv{font-size:21px;font-weight:800;color:var(--mc-c,var(--ink));font-family:'JetBrains Mono',monospace;letter-spacing:-1px;line-height:1}
+.mms{font-size:10px;color:var(--muted);margin-top:3px;font-weight:500}
+
+/* Score table */
+.stbl{width:100%;border-collapse:collapse;font-size:11.5px}
+.stbl th{background:var(--cream);color:var(--muted);font-weight:700;padding:8px 12px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid var(--border)}
+.stbl td{padding:8px 12px;border-bottom:1px solid var(--border);font-weight:500}
+.stbl tr:hover td{background:var(--cream)}
+.spill-sm{display:inline-flex;font-size:11px;padding:3px 10px;border-radius:99px;font-weight:700;font-family:'JetBrains Mono',monospace}
+
+/* ═══ EXPORT ═══ */
+.ec{background:var(--paper);border:1px solid var(--border);border-radius:var(--rad);padding:1.1rem;margin-bottom:.9rem;box-shadow:var(--sh1)}
+.et{font-size:16px;font-weight:800;color:var(--ink);margin-bottom:.9rem;letter-spacing:-.5px}
+.eck{display:flex;align-items:center;gap:.6rem;font-size:13px;padding:.45rem 0;cursor:pointer;font-weight:500;border-bottom:1px solid var(--border)}
+.eck:last-of-type{border:none}
+.eck input{width:16px;height:16px;accent-color:var(--v);cursor:pointer}
+.ibox{background:linear-gradient(135deg,var(--vb),var(--bb));border:1.5px solid var(--v3);border-radius:13px;padding:.9rem;font-size:11.5px;color:var(--ink2);line-height:1.75;margin:.8rem 0;font-weight:500}
+.bpdf{width:100%;padding:14px;border-radius:14px;border:none;background:linear-gradient(135deg,var(--ink2),var(--v));color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;box-shadow:0 8px 28px rgba(91,33,182,.4);transition:.2s;display:flex;align-items:center;justify-content:center;gap:.5rem;margin-bottom:.5rem;letter-spacing:-.2px}
+.bpdf:hover{transform:translateY(-1.5px);box-shadow:0 12px 36px rgba(91,33,182,.5)}
+.eprog{display:none;margin-top:.6rem;font-size:12px;color:var(--v);text-align:center;padding:.65rem;background:var(--vb);border-radius:10px;font-weight:700}
+.sg{display:grid;grid-template-columns:repeat(3,1fr);gap:.45rem}
+.ctb{padding:10px 5px;border-radius:11px;border:1.5px solid var(--border);background:var(--cream);cursor:pointer;color:var(--muted);font-family:'Outfit',sans-serif;font-weight:700;font-size:10.5px;text-align:center;transition:.15s}
+.ctb:hover{border-color:var(--v);color:var(--v);background:var(--vb)}
+.ctb.on{background:linear-gradient(135deg,var(--v),var(--b2));color:#fff;border-color:transparent;box-shadow:0 4px 14px rgba(91,33,182,.35)}
+.dlgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:.45rem;margin-top:.65rem}
+.dlsc{padding:9px;border-radius:11px;border:1.5px solid var(--border);background:var(--cream);cursor:pointer;font-size:11px;font-weight:700;color:var(--muted);text-align:center;font-family:'Outfit',sans-serif;transition:.15s}
+.dlsc:hover{border-color:var(--v);color:var(--v);background:var(--vb)}
+
+/* ═══ RESPONSIVE ═══ */
+@media(min-width:480px){.sstrip{grid-template-columns:repeat(3,1fr)}.igrid{grid-template-columns:repeat(3,1fr)}.mmrow{grid-template-columns:repeat(4,1fr)}}
+@media(min-width:720px){.sstrip{grid-template-columns:repeat(5,1fr)}.igrid{grid-template-columns:repeat(4,1fr)}.afu-grid{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-box">
+    <div class="lb-icon">⭐</div>
+    <div class="lb-brand">
+      <div class="lb-title">SKPM <em>Pro</em></div>
+      <div class="lb-sub">Sistem Kualiti Pengurusan Sekolah</div>
+      <div class="lb-sn" id="lbSN"></div>
+    </div>
+    <label class="lf-lbl">Nama Pengguna</label>
+    <input class="lf-inp" id="lf-u" type="text" placeholder="nama pengguna" autocomplete="username">
+    <label class="lf-lbl">Kata Laluan</label>
+    <div class="lf-pw">
+      <input class="lf-inp" id="lf-p" type="password" placeholder="kata laluan" autocomplete="current-password">
+      <button class="lf-eye" id="lf-eye" onclick="togglePw()">👁</button>
+    </div>
+    <div class="lf-err-msg" id="lf-err">❌ Nama pengguna atau kata laluan tidak sah</div>
+    <button class="lf-submit" id="loginBtn">Masuk ke Sistem →</button>
+    <div class="lf-note">SKPM Pro v2.0 · Hubungi Admin jika lupa kata laluan</div>
+  </div>
+</div>
+
+<!-- SCHOOL MODAL -->
+<div class="mover" id="schoolMod">
+  <div class="msheet">
+    <div class="sh-pill" onclick="closeSM()"></div>
+    <div class="sh-title">✏️ Maklumat Sekolah</div>
+    <div class="logo-ring" id="logoRing" onclick="document.getElementById('logoFI').click()">
+      <span id="logoPH" style="font-size:28px">🏫</span>
+      <img id="logoPV" src="" alt="">
+    </div>
+    <div class="logo-hint">Klik untuk muat naik logo<br><small style="opacity:.7">JPG/PNG · 200×200px</small></div>
+    <button class="logo-rm" id="logoRM" onclick="rmLogo()">✕ Buang logo</button>
+    <input type="file" id="logoFI" class="fi" accept="image/*" onchange="handleLogo(event)">
+    <label>Nama Sekolah</label><input id="m-nm" value="SMK Contoh Jaya">
+    <label>Jenis Sekolah</label>
+    <select id="m-jn"><option>SMK</option><option>SK</option><option>SJK(C)</option><option>SJK(T)</option><option>SMJK</option><option>SBP</option><option>MRSM</option><option>Swasta</option></select>
+    <label>Daerah / Negeri</label><input id="m-dr" placeholder="Daerah, Negeri">
+    <label>Kod Sekolah</label><input id="m-kd" placeholder="Contoh: BEA1001">
+    <label>Nama PGB / Guru Besar</label><input id="m-pgb" placeholder="Nama PGB">
+    <div class="mbtns">
+      <button class="msb msb-x" onclick="closeSM()">Batal</button>
+      <button class="msb msb-ok" onclick="saveSM()">Simpan ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN MODAL -->
+<div class="mover" id="adminMod">
+  <div class="msheet">
+    <div class="sh-pill" onclick="closeAP()"></div>
+    <div class="sh-title">⚙️ Panel Admin</div>
+    <div class="ap-s"><div class="ap-st">Senarai Pengguna</div><div id="uList"></div></div>
+    <div class="ap-s">
+      <div class="ap-st">Tambah / Kemaskini</div>
+      <div class="ap-msg" id="apMsg"></div>
+      <div class="afu-grid">
+        <div class="afu-col afu-full"><div class="afu-lbl">Nama Penuh</div><input class="afu-inp" id="af-nm" placeholder="Nama penuh"></div>
+        <div class="afu-col"><div class="afu-lbl">Username</div><input class="afu-inp" id="af-us" placeholder="username"></div>
+        <div class="afu-col"><div class="afu-lbl">Kata Laluan</div>
+          <div style="position:relative"><input class="afu-inp" id="af-pw" type="password" placeholder="kata laluan" style="padding-right:34px">
+          <button onclick="tAPw()" style="position:absolute;right:9px;top:9px;background:none;border:none;cursor:pointer;font-size:13px;color:var(--muted)">👁</button></div>
+        </div>
+        <div class="afu-col"><div class="afu-lbl">Peranan</div>
+          <select class="afu-sel" id="af-rl"><option value="admin">👑 Admin</option><option value="user" selected>✏️ Pengguna</option><option value="view">👁 Tontonan</option></select>
+        </div>
+        <div class="afu-col"><div class="afu-lbl">Jawatan</div><input class="afu-inp" id="af-jw" placeholder="Jawatan"></div>
+        <div class="afu-col"><div class="afu-lbl">E-mel</div><input class="afu-inp" id="af-em" type="email" placeholder="email@edu.my"></div>
+      </div>
+      <input type="hidden" id="af-ed">
+      <button class="ap-btn" id="apSB" onclick="saveUser()">💾 Simpan Pengguna</button>
+    </div>
+    <button class="ap-cls" onclick="closeAP()">Tutup Panel</button>
+  </div>
+</div>
+
+<!-- DL MODAL -->
+<div class="dlover" id="dlMod">
+  <div class="dlsheet">
+    <div class="sh-pill" onclick="closeDL()"></div>
+    <div class="sh-title" id="dlTitle">Muat Turun</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:.5rem;font-weight:500">Pilih format:</p>
+    <div class="dlbtns">
+      <button class="dlb dlb-png" onclick="dlPNG()">🖼 PNG</button>
+      <button class="dlb dlb-csv" onclick="dlCSV()">📋 CSV</button>
+      <button class="dlb dlb-pdf" onclick="dlPDF()">📄 PDF</button>
+      <button class="dlb dlb-x" onclick="closeDL()">✕ Tutup</button>
+    </div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-badge" id="hdrBdg">⭐<img id="hdrLI" src="" alt=""></div>
+  <div class="hdr-brand">SKPM <em>Pro</em></div>
+  <div class="hdr-sep"></div>
+  <img class="hdr-slogo" id="hdrSL" src="" alt="">
+  <div class="hdr-info">
+    <div class="hdr-sn" id="dispN">SMK Contoh Jaya</div>
+    <div class="hdr-sub" id="dispS">Dashboard SKPM Kualiti</div>
+  </div>
+  <div class="hdr-acts">
+    <button class="hbtn hbtn-adm" id="adminBtn" onclick="openAP()" style="display:none">⚙ Admin</button>
+    <button class="hbtn" onclick="openSM()">✏ Edit</button>
+    <button class="hbtn hbtn-out" onclick="doLogout()" title="Log Keluar">⏏</button>
+  </div>
+</div>
+
+<!-- TAB NAV -->
+<div class="tabnav">
+  <div class="tn on" onclick="sp('ov',this)"><div class="tn-ic">📊</div>Overview</div>
+  <div class="tn" onclick="sp('s1',this)"><div class="tn-ic">👑</div>Standard 1</div>
+  <div class="tn" onclick="sp('s2',this)"><div class="tn-ic">⚙️</div>Standard 2</div>
+  <div class="tn" onclick="sp('s3',this)"><div class="tn-ic">📚</div>Standard 3</div>
+  <div class="tn" onclick="sp('s4',this)"><div class="tn-ic">👩‍🏫</div>Standard 4</div>
+  <div class="tn" onclick="sp('s5',this)"><div class="tn-ic">🎓</div>Standard 5</div>
+  <div class="tn" onclick="sp('ex',this)"><div class="tn-ic">📄</div>Eksport</div>
+</div>
+
+<div class="main">
+<!-- OVERVIEW -->
+<div class="pg on" id="pg-ov">
+  <div class="ph"><div class="ph-l"><div class="ph-t">Dashboard SKPM</div><div class="ph-s">Skor Kualiti Pengurusan Sekolah Malaysia</div></div>
+  <select class="yr-sel" id="yr-ov" onchange="rAll()"><option value="2023">2023</option><option value="2024" selected>2024</option><option value="2025">2025</option></select></div>
+  <div class="sstrip" id="sstrip"></div>
+  <div class="card">
+    <div class="chd"><div class="ctw"><input class="cttl ct1" id="ti-ovR" value="Prestasi Semua Standard" onfocus="this.select()"><div class="edit-h">✏ Klik untuk edit tajuk</div></div>
+    <div class="cacts"><select class="csel" id="ty-ovR" onchange="rOV()"><option value="radar">🕸 Radar</option><option value="bar">📊 Bar</option><option value="line">📈 Garisan</option></select>
+    <select class="csel" id="lb-ovR" onchange="rOV()"><option value="nilai">Nilai</option><option value="tiada">Tiada</option></select>
+    <button class="dlbtn" onclick="openDL('ovR')">⬇</button></div></div>
+    <div class="leg" id="lg-ovR"></div><div style="height:290px"><canvas id="ovR"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="chd"><div class="ctw"><input class="cttl ct1" id="ti-ovT" value="Trend Skor Standard 2023–2025" onfocus="this.select()"><div class="edit-h">✏ Klik untuk edit tajuk</div></div>
+    <div class="cacts"><select class="csel" id="ty-ovT" onchange="rOV()"><option value="line">📈 Garisan</option><option value="bar">📊 Bar</option></select>
+    <select class="csel" id="lb-ovT" onchange="rOV()"><option value="nilai">Nilai</option><option value="tiada">Tiada</option></select>
+    <button class="dlbtn" onclick="openDL('ovT')">⬇</button></div></div>
+    <div class="leg" id="lg-ovT"></div><div style="height:260px"><canvas id="ovT"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="chd"><div class="ctw"><input class="cttl ct1" id="ti-ovTbl" value="Jadual Perbandingan Skor Standard" onfocus="this.select()"></div></div>
+    <div style="overflow-x:auto"><table class="stbl" id="ovTbl"></table></div>
+  </div>
+</div>
+
+<!-- S1 -->
+<div class="pg" id="pg-s1">
+  <div class="ph"><div class="ph-l"><div class="ph-t">Standard 1</div><div class="ph-s">Kepimpinan — PGB Sebagai Peneraju, Pembimbing & Pendorong</div></div>
+  <select class="yr-sel" id="yr-s1" onchange="syncForm('s1');rS1()"><option value="2023">2023</option><option value="2024" selected>2024</option><option value="2025">2025</option></select></div>
+  <div class="ic"><div class="ic-t">👑 Kemaskini Skor Standard 1</div>
+  <div class="ic-s">KEPIMPINAN</div>
+  <div class="igrid">
+    <div class="ig"><div class="il">1.1 PGB Sebagai Peneraju</div><input id="f-s1-11" type="number" step="0.01" min="0" max="100"></div>
+    <div class="ig"><div class="il">1.2 PGB Sebagai Pembimbing</div><input id="f-s1-12" type="number" step="0.01" min="0" max="100"></div>
+    <div class="ig"><div class="il">1.3 PGB Sebagai Pendorong</div><input id="f-s1-13" type="number" step="0.01" min="0" max="100"></div>
+  </div>
+  <button class="bupd" onclick="saveRender('s1')">✦ Kemaskini Carta Standard 1</button></div>
+  <div class="mmrow" id="mr-s1"></div>
+  <div class="card"><div class="spill sp1">👑 Kepimpinan</div>
+    <div class="chd"><div class="ctw"><input class="cttl ct1" id="ti-s1B" value="Skor Standard 1 — Kepimpinan" onfocus="this.select()"><div class="edit-h">✏ Edit tajuk</div></div>
+    <div class="cacts"><select class="csel" id="ty-s1B" onchange="rS1()"><option value="bar">📊 Bar</option><option value="3dbar">🧊 3D</option><option value="doughnut">⭕ Donut</option><option value="pie">🥧 Pai</option><option value="polarArea">🎯 Polar</option></select>
+    <select class="csel" id="lb-s1B" onchange="rS1()"><option value="nilai">Nilai</option><option value="peratus">%</option><option value="kedua">Nilai+%</option><option value="tiada">Tiada</option></select>
+    <button class="dlbtn" onclick="openDL('s1B')">⬇</button></div></div>
+    <div class="leg" id="lg-s1B"></div><div style="height:230px"><canvas id="s1B"></canvas></div>
+  </div>
+  <div class="card"><div class="spill sp1">📈 Trend</div>
+    <div class="chd"><div class="ctw"><input class="cttl ct1" id="ti-s1T" value="Trend Standard 1 (2023–2025)" onfocus="this.select()"><div class="edit-h">✏ Edit tajuk</div></div>
+    <div class="cacts"><select class="csel" id="ty-s1T" onchange="rS1()"><option value="line">📈 Garisan</option><option value="bar">📊 Bar</option></select>
+    <select class="csel" id="lb-s1T" onchange="rS1()"><option value="nilai">Nilai</option><option value="tiada">Tiada</option></select>
+    <button class="dlbtn" onclick="openDL('s1T')">⬇</button></div></div>
+    <div class="leg" id="lg-s1T"></div><div style="height:230px"><canvas id="s1T"></canvas></div>
+  </div>
+  <div class="card"><div class="spill sp1">📋 Status KPI</div>
+    <div class="chd"><div class="ctw"><input class="cttl ct1" id="ti-s1K" value="Status Pencapaian Standard 1" onfocus="this.select()"></div></div>
+    <div id="kpi-s1"></div>
+  </div>
+</div>
+
+<!-- S2 -->
+<div class="pg" id="pg-s2">
+  <div class="ph"><div class="ph-l"><div class="ph-t">Standard 2</div><div class="ph-s">Pengurusan — Sumber, Aset, Kewangan, Iklim & Perpaduan</div></div>
+  <select class="yr-sel" id="yr-s2" onchange="syncForm('s2');rS2()"><option value="2023">2023</option><option value="2024" selected>2024</option><option value="2025">2025</option></select></div>
+  <div class="ic"><div class="ic-t">⚙️ Kemaskini Skor Standard 2</div>
+  <div class="ic-s">PENGURUSAN</div>
+  <div class="igrid">
+    <div class="ig"><div class="il">2.1 Sumber Manusia</div><input id="f-s2-21" type="number" step="0.01"></div>
+    <div class="ig"><div class="il">2.2 Pengurusan Aset</div><input id="f-s2-22" type="number" step="0.01"></div>
+    <div class="ig"><div class="il">2.3 Pengurusan Kewangan</div><input id="f-s2-23" type="number" step="0.01"></div>
+    <div class="ig"><div class="il">2.4 Sumber Pendidikan</div><input id="f-s2-24" type="number" step="0.01"></div>
+    <div class="ig"><div class="il">2.5 Iklim</div><input id="f-s2-25" type="number" step="0.01"></div>
+    <div class="ig"><div class="il">2.6 Pengurusan Perpaduan</div><input id="f-s2-26" type="number" step="0.01"></div>
+    <div class="ig"><div class="il">2.7 Permuafakatan Strategik</div><input id="f-s2-27" type="number" step="0.01"></div>
+  </div>
+  <button class="bupd" onclick="saveRender('s2')">✦ Kemaskini Carta Standard 2</button></div>
+  <div class="mmrow" id="mr-s2"></div>
+  <div class="card"><div class="spill sp2">⚙️ Pengurusan</div>
+    <div class="chd"><div class="ctw"><input class="cttl ct2" id="ti-s2B" value="Skor Standard 2 — Pengurusan" onfocus="this.select()"><div class="edit-h">✏ Edit tajuk</div></div>
+    <div class="cacts"><select class="csel" id="ty-s2B" onchange="rS2()"><option value="bar">📊 Bar</option><option value="3dbar">🧊 3D</option><option value="radar">🕸 Radar</option><option value="doughnut">⭕ Donut</option><option value="polarArea">🎯 Polar</option></select>
+    <select class="csel" id="lb-s2B" onchange="rS2()"><option value="nilai">Nilai</option><option value="peratus">%</option><option value="kedua">Nilai+%</option><option value="tiada">Tiada</option></select>
+    <button class="dlbtn" onclick="openDL('s2B')">⬇</button></div></div>
+    <div class="leg" id="lg-s2B"></div><div style="height:260px"><canvas id="s2B"></canvas></div>
+  </div>
+  <div class="card"><div class="spill sp2">📋 Status KPI</div>
+    <div class="chd"><div class="ctw"><input class="cttl ct2" id="ti-s2K" value="Status Pencapaian Standard 2" onfocus="this.select()"></div></div>
+    <div id="kpi-s2"></div>
+  </div>
+</div>
+
+<!-- S3 -->
+<div class="pg" id="pg-s3">
+  <div class="ph"><div class="ph-l"><div class="ph-t">Standard 3</div><div class="ph-s">Pengurusan Kurikulum, Kokurikulum & HEM</div></div>
+  <select class="yr-sel" id="yr-s3" onchange="syncForm('s3');rS3()"><option value="2023">2023</option><option value="2024" selected>2024</option><option value="2025">2025</option></select></div>
+  <div class="ic"><div class="ic-t">📚 Kemaskini Skor Standard 3</div>
+  <div class="ic-s">3.1 PENGURUSAN KURIKULUM</div>
+  <div class="igrid">
+    <div class="ig"><div class="il">3.1.1 Pelaksanaan Kurikulum</div><input id="f-s31-311" type="number" step="0.01"></div>
+    <div class="ig"><div class="il">3.1.2 Pengurusan Mata Pelajaran</div><input id="f-s31-312" type="number" step="0.01"></div>
+    <div class="ig"><div class="il">3.1.3 Masa Instruksional</div><input id="f-s31-313" type="number" step="0.01"></div>
+    <div class="ig"><div class="il">3.1.4 Penilaian Murid</div><input id="f-s31-314" type="number" step="0.01"></div>
+  </div>
+  <div class="ic-s">3.2 PENGURUSAN KOKURIKULUM</div>
+  <div class="igrid">
+    <div class="ig"><div class="il">3.2.1 Pelaksanaan Kokurikulum</div><input id="f-s32-321" type="number" step="0.01"></div>
+    <div class="ig"><div class="il">3.2.2 Kelab/Persatuan</div><input id="f-s32-322" type="number" step="0.01"></div>
+    <div class="ig"><div class="il">3.2.3 Badan Beruniform</div><input id="f-s32-323" type="number" step="0.01"></div>
+    <div class="ig"><div class="il">3.2.4 Sukan/Permainan</div><input id="f-s32-324" type="number" step="0.01"></div>
+    <div class="ig"><div class="il">3.2.5 Program Kecemerlangan</div><input id="f-s32-325" type="number" step="0.01"></div>
+    <div class="ig"><div class="il">3.2.6 Sukan Untuk Semua</div><input id="f-s32-326" type="number" step="0.01"></div>
+    <div class="ig"><div class="il">3.2.7 Pentaksiran Kokurikulum</div><input id="f-s32-327" type="number" step="0.01"></div>
+  </div>
+  <div class="ic-s">3.3 PENGURUSAN HEM</div>
+  <div class="igrid">
+    <div class="ig"><div class="il">3.3.1 Pelaksanaan HEM</div><input id="f-s33-331" type="number" step="0.01"></div>
+    <div class="ig"><div class="il">3.3.2 Disiplin Murid</div><input id="f-s33-332" type="number" step="0.01"></div>
+    <div class="ig"><div class="il">3.3.3 Keselamatan Murid</div><input id="f-s33-333" type="number" step="0.01"></div>
+    <div class="ig"><div class="il">3.3.4 Kesihatan Murid</div><input id="f-s33-334" type="number" step="0.01"></div>
+    <div class="ig"><div class="il">3.3.5 Bantuan Pelajaran</div><input id="f-s33-335" type="number" step="0.01"></div>
+    <div class="ig"><div class="il">3.3.6 Bimbingan & Kaunseling</div><input id="f-s33-336" type="number" step="0.01"></div>
+    <div class="ig"><div class="il">3.3.7 Pentadbiran Psikometrik</div><input id="f-s33-337" type="number" step="0.01"></div>
+  </div>
+  <button class="bupd" onclick="saveRender('s3')">✦ Kemaskini Carta Standard 3</button></div>
+  <div class="mmrow" id="mr-s3"></div>
+  <div class="card"><div class="spill sp3">📚 Kurikulum (3.1)</div>
+    <div class="chd"><div class="ctw"><input class="cttl ct3" id="ti-s31B" value="Skor 3.1 — Pengurusan Kurikulum" onfocus="this.select()"><div class="edit-h">✏ Edit tajuk</div></div>
+    <div class="cacts"><select class="csel" id="ty-s31B" onchange="rS3()"><option value="bar">📊 Bar</option><option value="3dbar">🧊 3D</option><option value="doughnut">⭕ Donut</option><option value="polarArea">🎯 Polar</option></select>
+    <select class="csel" id="lb-s31B" onchange="rS3()"><option value="nilai">Nilai</option><option value="peratus">%</option><option value="kedua">Nilai+%</option><option value="tiada">Tiada</option></select>
+    <button class="dlbtn" onclick="openDL('s31B')">⬇</button></div></div>
+    <div class="leg" id="lg-s31B"></div><div style="height:220px"><canvas id="s31B"></canvas></div>
+  </div>
+  <div class="card"><div class="spill sp3">🏅 Kokurikulum (3.2)</div>
+    <div class="chd"><div class="ctw"><input class="cttl ct3" id="ti-s32B" value="Skor 3.2 — Pengurusan Kokurikulum" onfocus="this.select()"><div class="edit-h">✏ Edit tajuk</div></div>
+    <div class="cacts"><select class="csel" id="ty-s32B" onchange="rS3()"><option value="bar">📊 Bar</option><option value="3dbar">🧊 3D</option><option value="radar">🕸 Radar</option><option value="doughnut">⭕ Donut</option></select>
+    <select class="csel" id="lb-s32B" onchange="rS3()"><option value="nilai">Nilai</option><option value="peratus">%</option><option value="kedua">Nilai+%</option><option value="tiada">Tiada</option></select>
+    <button class="dlbtn" onclick="openDL('s32B')">⬇</button></div></div>
+    <div class="leg" id="lg-s32B"></div><div style="height:250px"><canvas id="s32B"></canvas></div>
+  </div>
+  <div class="card"><div class="spill sp3">👥 HEM (3.3)</div>
+    <div class="chd"><div class="ctw"><input class="cttl ct3" id="ti-s33B" value="Skor 3.3 — Pengurusan HEM" onfocus="this.select()"><div class="edit-h">✏ Edit tajuk</div></div>
+    <div class="cacts"><select class="csel" id="ty-s33B" onchange="rS3()"><option value="bar">📊 Bar</option><option value="3dbar">🧊 3D</option><option value="radar">🕸 Radar</option><option value="doughnut">⭕ Donut</option></select>
+    <select class="csel" id="lb-s33B" onchange="rS3()"><option value="nilai">Nilai</option><option value="peratus">%</option><option value="kedua">Nilai+%</option><option value="tiada">Tiada</option></select>
+    <button class="dlbtn" onclick="openDL('s33B')">⬇</button></div></div>
+    <div class="leg" id="lg-s33B"></div><div style="height:250px"><canvas id="s33B"></canvas></div>
+  </div>
+</div>
+
+<!-- S4 -->
+<div class="pg" id="pg-s4">
+  <div class="ph"><div class="ph-l"><div class="ph-t">Standard 4</div><div class="ph-s">Pembelajaran & Pemudahcaraan (PdPc)</div></div>
+  <select class="yr-sel" id="yr-s4" onchange="syncForm('s4');rS4()"><option value="2023">2023</option><option value="2024" selected>2024</option><option value="2025">2025</option></select></div>
+  <div class="ic"><div class="ic-t">👩‍🏫 Kemaskini Skor Standard 4</div>
+  <div class="ic-s">PEMBELAJARAN & PEMUDAHCARAAN</div>
+  <div class="igrid">
+    <div class="ig"><div class="il">4.1 Guru Sebagai Perancang</div><input id="f-s4-41" type="number" step="0.01"></div>
+    <div class="ig"><div class="il">4.2 Guru Sebagai Pengawal</div><input id="f-s4-42" type="number" step="0.01"></div>
+    <div class="ig"><div class="il">4.3 Guru Sebagai Pembimbing</div><input id="f-s4-43" type="number" step="0.01"></div>
+    <div class="ig"><div class="il">4.4 Guru Sebagai Pendorong</div><input id="f-s4-44" type="number" step="0.01"></div>
+    <div class="ig"><div class="il">4.5 Guru Sebagai Penilai</div><input id="f-s4-45" type="number" step="0.01"></div>
+    <div class="ig"><div class="il">4.6 Murid Sebagai Pembelajar Aktif</div><input id="f-s4-46" type="number" step="0.01"></div>
+  </div>
+  <button class="bupd" onclick="saveRender('s4')">✦ Kemaskini Carta Standard 4</button></div>
+  <div class="mmrow" id="mr-s4"></div>
+  <div class="card"><div class="spill sp4">👩‍🏫 PdPc</div>
+    <div class="chd"><div class="ctw"><input class="cttl ct4" id="ti-s4B" value="Skor Standard 4 — PdPc" onfocus="this.select()"><div class="edit-h">✏ Edit tajuk</div></div>
+    <div class="cacts"><select class="csel" id="ty-s4B" onchange="rS4()"><option value="bar">📊 Bar</option><option value="3dbar">🧊 3D</option><option value="radar">🕸 Radar</option><option value="doughnut">⭕ Donut</option><option value="polarArea">🎯 Polar</option></select>
+    <select class="csel" id="lb-s4B" onchange="rS4()"><option value="nilai">Nilai</option><option value="peratus">%</option><option value="kedua">Nilai+%</option><option value="tiada">Tiada</option></select>
+    <button class="dlbtn" onclick="openDL('s4B')">⬇</button></div></div>
+    <div class="leg" id="lg-s4B"></div><div style="height:250px"><canvas id="s4B"></canvas></div>
+  </div>
+  <div class="card"><div class="spill sp4">📋 Status KPI</div>
+    <div class="chd"><div class="ctw"><input class="cttl ct4" id="ti-s4K" value="Status Pencapaian Standard 4" onfocus="this.select()"></div></div>
+    <div id="kpi-s4"></div>
+  </div>
+</div>
+
+<!-- S5 -->
+<div class="pg" id="pg-s5">
+  <div class="ph"><div class="ph-l"><div class="ph-t">Standard 5</div><div class="ph-s">Kemenjadian Murid, Pencapaian & Indeks Kualiti Sekolah (IKS)</div></div>
+  <select class="yr-sel" id="yr-s5" onchange="syncForm('s5');rS5()"><option value="2023">2023</option><option value="2024" selected>2024</option><option value="2025">2025</option></select></div>
+  <div class="ic"><div class="ic-t">🎓 Kemaskini Skor Standard 5</div>
+  <div class="ic-s">KEMENJADIAN & PENCAPAIAN</div>
+  <div class="igrid">
+    <div class="ig"><div class="il">5.1 Kemenjadian Akademik</div><input id="f-s5-51" type="number" step="0.01"></div>
+    <div class="ig"><div class="il">5.2 Kemenjadian Kokurikulum</div><input id="f-s5-52" type="number" step="0.01"></div>
+    <div class="ig"><div class="il">5.3 Kemenjadian Sahsiah</div><input id="f-s5-53" type="number" step="0.01"></div>
+    <div class="ig"><div class="il">5.4.1 Pencapaian Guru</div><input id="f-s5-541" type="number" step="0.01"></div>
+    <div class="ig"><div class="il">5.4.2 Pencapaian Sekolah</div><input id="f-s5-542" type="number" step="0.01"></div>
+  </div>
+  <div class="ic-s">INDEKS KUALITI SEKOLAH (IKS)</div>
+  <div class="igrid">
+    <div class="ig"><div class="il">6.1 Kekuatan Kami</div><input id="f-s5-61" type="number" step="0.01"></div>
+    <div class="ig"><div class="il">6.2 Pengurusan Kami</div><input id="f-s5-62" type="number" step="0.01"></div>
+    <div class="ig"><div class="il">6.3 Pencapaian Kami</div><input id="f-s5-63" type="number" step="0.01"></div>
+  </div>
+  <button class="bupd" onclick="saveRender('s5')">✦ Kemaskini Carta Standard 5</button></div>
+  <div class="mmrow" id="mr-s5"></div>
+  <div class="card"><div class="spill sp5">🎓 Kemenjadian</div>
+    <div class="chd"><div class="ctw"><input class="cttl ct5" id="ti-s5B" value="Skor Standard 5 — Kemenjadian Murid" onfocus="this.select()"><div class="edit-h">✏ Edit tajuk</div></div>
+    <div class="cacts"><select class="csel" id="ty-s5B" onchange="rS5()"><option value="bar">📊 Bar</option><option value="3dbar">🧊 3D</option><option value="doughnut">⭕ Donut</option><option value="polarArea">🎯 Polar</option></select>
+    <select class="csel" id="lb-s5B" onchange="rS5()"><option value="nilai">Nilai</option><option value="peratus">%</option><option value="kedua">Nilai+%</option><option value="tiada">Tiada</option></select>
+    <button class="dlbtn" onclick="openDL('s5B')">⬇</button></div></div>
+    <div class="leg" id="lg-s5B"></div><div style="height:240px"><canvas id="s5B"></canvas></div>
+  </div>
+  <div class="card"><div class="spill sp5">⭐ IKS</div>
+    <div class="chd"><div class="ctw"><input class="cttl ct5" id="ti-s5I" value="Indeks Kualiti Sekolah (IKS)" onfocus="this.select()"><div class="edit-h">✏ Edit tajuk</div></div>
+    <div class="cacts"><select class="csel" id="ty-s5I" onchange="rS5()"><option value="doughnut">⭕ Donut</option><option value="pie">🥧 Pai</option><option value="bar">📊 Bar</option><option value="polarArea">🎯 Polar</option></select>
+    <select class="csel" id="lb-s5I" onchange="rS5()"><option value="nilai">Nilai</option><option value="peratus">%</option><option value="kedua">Nilai+%</option><option value="tiada">Tiada</option></select>
+    <button class="dlbtn" onclick="openDL('s5I')">⬇</button></div></div>
+    <div class="leg" id="lg-s5I"></div><div style="height:230px"><canvas id="s5I"></canvas></div>
+  </div>
+</div>
+
+<!-- EKSPORT -->
+<div class="pg" id="pg-ex">
+  <div class="ph"><div class="ph-l"><div class="ph-t">Eksport & Laporan</div><div class="ph-s">Muat turun data & jana laporan PDF profesional</div></div></div>
+  <div class="ec"><div class="et">📄 Jana Laporan PDF Lengkap</div>
+    <label class="eck"><input type="checkbox" id="pdf-s1" checked> Standard 1 — Kepimpinan</label>
+    <label class="eck"><input type="checkbox" id="pdf-s2" checked> Standard 2 — Pengurusan</label>
+    <label class="eck"><input type="checkbox" id="pdf-s3" checked> Standard 3 — Kurikulum, Kokurikulum & HEM</label>
+    <label class="eck"><input type="checkbox" id="pdf-s4" checked> Standard 4 — PdPc</label>
+    <label class="eck"><input type="checkbox" id="pdf-s5" checked> Standard 5 — Kemenjadian & IKS</label>
+    <label class="eck"><input type="checkbox" id="pdf-ch" checked> Sertakan semua carta sebagai imej</label>
+    <div class="ibox">💡 <strong>Jana PDF:</strong> Klik butang di bawah → tab baru terbuka → <strong>Ctrl+P</strong> / <strong>Cmd+P</strong> → pilih <em>Save as PDF</em></div>
+    <button class="bpdf" onclick="exportPDF()">⬇ Jana Laporan SKPM Pro PDF</button>
+    <div class="eprog" id="eprog">⏳ Menyediakan laporan...</div>
+  </div>
+  <div class="ec"><div class="et">🖼 Muat Turun Carta Individu</div>
+    <div class="dlgrid">
+      <button class="dlsc" onclick="openDL('ovR')">📊 Overview Radar</button>
+      <button class="dlsc" onclick="openDL('ovT')">📈 Trend Semua</button>
+      <button class="dlsc" onclick="openDL('s1B')">👑 S1 Kepimpinan</button>
+      <button class="dlsc" onclick="openDL('s1T')">📈 S1 Trend</button>
+      <button class="dlsc" onclick="openDL('s2B')">⚙️ S2 Pengurusan</button>
+      <button class="dlsc" onclick="openDL('s31B')">📚 S3.1 Kurikulum</button>
+      <button class="dlsc" onclick="openDL('s32B')">🏅 S3.2 Kokurikulum</button>
+      <button class="dlsc" onclick="openDL('s33B')">👥 S3.3 HEM</button>
+      <button class="dlsc" onclick="openDL('s4B')">👩‍🏫 S4 PdPc</button>
+      <button class="dlsc" onclick="openDL('s5B')">🎓 S5 Kemenjadian</button>
+      <button class="dlsc" onclick="openDL('s5I')">⭐ IKS</button>
+    </div>
+  </div>
+  <div class="ec"><div class="et">🎨 Gaya Carta Global</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:.75rem;font-weight:500">Tukar semua carta serentak</p>
+    <div class="sg">
+      <button class="ctb on" id="gs-bar" onclick="setGS('bar',this)">📊 Bar</button>
+      <button class="ctb" id="gs-3dbar" onclick="setGS('3dbar',this)">🧊 3D Bar</button>
+      <button class="ctb" id="gs-line" onclick="setGS('line',this)">📈 Garisan</button>
+      <button class="ctb" id="gs-radar" onclick="setGS('radar',this)">🕸 Radar</button>
+      <button class="ctb" id="gs-doughnut" onclick="setGS('doughnut',this)">⭕ Donut</button>
+      <button class="ctb" id="gs-polarArea" onclick="setGS('polarArea',this)">🎯 Polar</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- end .main -->
+<script>
+Chart.register(ChartDataLabels);
+const CH={},DLS={id:null};
+window._ROLE='admin';
+
+/* ── DATA ── */
+const D={
+  2023:{s1:{i11:99,i12:99,i13:100},s2:{i21:93.75,i22:85,i23:87.5,i24:87.5,i25:88.54,i26:80,i27:87.5},
+    s31:{i311:93.75,i312:94.66,i313:93.75,i314:95},
+    s32:{i321:100,i322:46,i323:88,i324:52.5,i325:100,i326:100,i327:100},
+    s33:{i331:100,i332:100,i333:87.5,i334:93.75,i335:93.75,i336:87.5,i337:87.5},
+    s4:{i41:98.36,i42:96.33,i43:92.17,i44:94.7,i45:94.34,i46:95.56},
+    s5:{i51:36.5,i52:14.87,i53:7.94,i541:76.6,i542:65,i61:89.43,i62:92.12,i63:42.12}},
+  2024:{s1:{i11:90.5,i12:87.5,i13:90},s2:{i21:93.75,i22:95,i23:87.5,i24:87.5,i25:88.54,i26:90,i27:87.5},
+    s31:{i311:93.75,i312:95,i313:93.75,i314:98},
+    s32:{i321:100,i322:46,i323:88,i324:52.5,i325:95,i326:95,i327:100},
+    s33:{i331:100,i332:95,i333:87.5,i334:93.75,i335:99,i336:87.5,i337:87.5},
+    s4:{i41:98.36,i42:96.33,i43:97,i44:94.7,i45:94.34,i46:99},
+    s5:{i51:36.5,i52:14.87,i53:7.94,i541:76.6,i542:65,i61:92,i62:92,i63:54}},
+  2025:{s1:{i11:70,i12:87.5,i13:87.5},s2:{i21:93.75,i22:85,i23:87.5,i24:87.5,i25:88.54,i26:80,i27:87.5},
+    s31:{i311:93.75,i312:94.66,i313:93.75,i314:95},
+    s32:{i321:100,i322:46,i323:88,i324:52.5,i325:100,i326:100,i327:100},
+    s33:{i331:100,i332:100,i333:87.5,i334:93.75,i335:93.75,i336:87.5,i337:87.5},
+    s4:{i41:98.36,i42:96.33,i43:92.17,i44:94.7,i45:94.34,i46:95.56},
+    s5:{i51:36.5,i52:14.87,i53:7.94,i541:76.6,i542:65,i61:89.43,i62:92.12,i63:42.12}}
+};
+const S={school:{name:'SMK Contoh Jaya',sub:'Dashboard SKPM Kualiti',logo:null,daerah:'',kod:'',pgb:'',jenis:'SMK'},gs:'bar'};
+
+/* helpers */
+const gv=id=>parseFloat(document.getElementById(id)?.value)||0;
+const sv=id=>document.getElementById(id)?.value||'';
+const gt=id=>document.getElementById('ti-'+id)?.value||id;
+const lv=id=>document.getElementById('lb-'+id)?.value||'nilai';
+const tv=id=>document.getElementById('ty-'+id)?.value||'bar';
+const mn=a=>a.reduce((x,y)=>x+y,0)/a.length;
+const dc=id=>{if(CH[id]){CH[id].destroy();delete CH[id]}};
+const slbl=s=>s>=90?'Cemerlang':s>=80?'Baik':s>=60?'Memuaskan':'Lemah';
+const spill=s=>s>=90?'sb-ex':s>=80?'sb-ok':s>=60?'sb-w':'sb-bd';
+const spilltbl=s=>s>=90?'sp1':s>=80?'sp2':s>=60?'sp4':'sp5';
+const kc=s=>s>=90?'var(--g2)':s>=80?'var(--b2)':s>=60?'var(--a2)':'var(--r2)';
+const ta=(a,b)=>a>b?'↑':a<b?'↓':'→';
+
+/* getters */
+function g1(y){const d=D[y].s1;return{...d,avg:mn([d.i11,d.i12,d.i13])}}
+function g2(y){const d=D[y].s2;return{...d,avg:mn([d.i21,d.i22,d.i23,d.i24,d.i25,d.i26,d.i27])}}
+function g31(y){const d=D[y].s31;return{...d,avg:mn([d.i311,d.i312,d.i313,d.i314])}}
+function g32(y){const d=D[y].s32;return{...d,avg:mn([d.i321,d.i322,d.i323,d.i324,d.i325,d.i326,d.i327])}}
+function g33(y){const d=D[y].s33;return{...d,avg:mn([d.i331,d.i332,d.i333,d.i334,d.i335,d.i336,d.i337])}}
+function g4(y){const d=D[y].s4;return{...d,avg:mn([d.i41,d.i42,d.i43,d.i44,d.i45,d.i46])}}
+function g5(y){const d=D[y].s5;return{...d,avg:mn([d.i51,d.i52,d.i53,d.i541,d.i542])}}
+
+/* ── AUTH ── */
+const SK='skpm3_u',SS='skpm3_s';
+function getU(){try{return JSON.parse(localStorage.getItem(SK))||defU()}catch{return defU()}}
+function saveU(u){localStorage.setItem(SK,JSON.stringify(u))}
+function defU(){const u=[{id:'u1',nama:'Administrator',username:'admin',password:'admin123',role:'admin',jawatan:'Pentadbir',email:''},{id:'u2',nama:'Pengguna Demo',username:'demo',password:'demo123',role:'view',jawatan:'Guru',email:''}];saveU(u);return u}
+function getSess(){try{return JSON.parse(sessionStorage.getItem(SS))}catch{return null}}
+function setSess(u){sessionStorage.setItem(SS,JSON.stringify({id:u.id,nama:u.nama,username:u.username,role:u.role,jawatan:u.jawatan}))}
+function clrSess(){sessionStorage.removeItem(SS)}
+
+function doLogin(){
+  const usr=sv('lf-u').trim(),pw=sv('lf-p');
+  const found=getU().find(u=>u.username===usr&&u.password===pw);
+  if(!found){
+    document.getElementById('lf-err').style.display='block';
+    ['lf-u','lf-p'].forEach(id=>document.getElementById(id).classList.add('err'));
+    setTimeout(()=>{document.getElementById('lf-err').style.display='none';['lf-u','lf-p'].forEach(id=>document.getElementById(id).classList.remove('err'))},3000);
+    return;
+  }
+  setSess(found);document.getElementById('loginOverlay').classList.add('gone');applySession(found);
+}
+function doLogout(){if(!confirm('Log keluar?'))return;clrSess();location.reload()}
+function togglePw(){const i=document.getElementById('lf-p');i.type=i.type==='password'?'text':'password';document.getElementById('lf-eye').textContent=i.type==='password'?'👁':'🙈'}
+function tAPw(){const i=document.getElementById('af-pw');i.type=i.type==='password'?'text':'password'}
+
+function applySession(u){
+  window._ROLE=u.role;
+  const ab=document.getElementById('adminBtn');if(ab)ab.style.display=u.role==='admin'?'':'none';
+  const sub=document.getElementById('dispS');
+  if(sub)sub.textContent=S.school.sub+' · '+u.nama+' — '+({admin:'👑 Admin',user:'✏ Edit',view:'👁 Tontonan'}[u.role]||'');
+  if(u.role==='view'){
+    const b=document.createElement('div');b.className='vo-bar';
+    b.innerHTML='👁 <strong>MOD TONTONAN SAHAJA</strong> — Data tidak boleh diedit. Hubungi Admin.';
+    const m=document.querySelector('.main');if(m)m.parentNode.insertBefore(b,m);
+    setInterval(lockV,900);setTimeout(lockV,200);
+  }
+}
+function lockV(){
+  if(window._ROLE!=='view')return;
+  document.querySelectorAll('.ic input,.ic select').forEach(e=>{e.disabled=true;e.style.cursor='not-allowed'});
+  document.querySelectorAll('.bupd,.bpdf').forEach(e=>{e.disabled=true;e.style.cursor='not-allowed'});
+  document.querySelectorAll('.cttl').forEach(e=>{e.readOnly=true;e.style.cursor='default'});
+  document.querySelectorAll('.hbtn').forEach(b=>{if(b.textContent.includes('Edit'))b.style.display='none'});
+}
+
+/* ── SCHOOL MODAL ── */
+function openSM(){
+  document.getElementById('m-nm').value=S.school.name;
+  document.getElementById('m-jn').value=S.school.jenis||'SMK';
+  document.getElementById('m-dr').value=S.school.daerah||'';
+  document.getElementById('m-kd').value=S.school.kod||'';
+  document.getElementById('m-pgb').value=S.school.pgb||'';
+  if(S.school.logo){document.getElementById('logoPH').style.display='none';const i=document.getElementById('logoPV');i.src=S.school.logo;i.style.display='block';document.getElementById('logoRM').style.display='block'}
+  else{document.getElementById('logoPH').style.display='';const i=document.getElementById('logoPV');i.src='';i.style.display='none';document.getElementById('logoRM').style.display='none'}
+  document.getElementById('schoolMod').classList.add('open');
+}
+function closeSM(){document.getElementById('schoolMod').classList.remove('open')}
+function saveSM(){
+  S.school.name=sv('m-nm')||'Nama Sekolah';S.school.jenis=sv('m-jn');
+  S.school.daerah=sv('m-dr');S.school.kod=sv('m-kd');S.school.pgb=sv('m-pgb');
+  S.school.sub=[S.school.jenis,S.school.daerah].filter(Boolean).join(' · ')||'Dashboard SKPM Kualiti';
+  document.getElementById('dispN').textContent=S.school.name;
+  const sess=getSess();const sub=document.getElementById('dispS');
+  if(sub&&sess)sub.textContent=S.school.sub+' · '+sess.nama+' — '+({admin:'👑 Admin',user:'✏ Edit',view:'👁 Tontonan'}[sess.role]||'');
+  closeSM();
+}
+function handleLogo(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{S.school.logo=ev.target.result;document.getElementById('logoPH').style.display='none';const i=document.getElementById('logoPV');i.src=ev.target.result;i.style.display='block';document.getElementById('logoRM').style.display='block';const sl=document.getElementById('hdrSL');sl.src=ev.target.result;sl.classList.add('show')};r.readAsDataURL(f)}
+function rmLogo(){S.school.logo=null;document.getElementById('logoPH').style.display='';const i=document.getElementById('logoPV');i.src='';i.style.display='none';document.getElementById('logoRM').style.display='none';document.getElementById('logoFI').value='';const sl=document.getElementById('hdrSL');sl.src='';sl.classList.remove('show')}
+
+/* ── ADMIN PANEL ── */
+function openAP(){if(window._ROLE!=='admin'){alert('Akses Admin sahaja!');return}renderUL();document.getElementById('adminMod').classList.add('open')}
+function closeAP(){document.getElementById('adminMod').classList.remove('open');clearAF()}
+function renderUL(){
+  const users=getU(),sess=getSess();
+  document.getElementById('uList').innerHTML=users.map(u=>`
+    <div class="urow ${u.role==='admin'?'uad':''}">
+      <div class="uic">${u.role==='admin'?'👑':u.role==='view'?'👁':'✏'}</div>
+      <div class="uinf"><div class="unm">${u.nama}<span class="rbadge ${u.role==='admin'?'rb-a':u.role==='view'?'rb-v':'rb-u'}">${u.role==='admin'?'Admin':u.role==='view'?'Tontonan':'Pengguna'}</span></div>
+      <div class="url">@${u.username}${u.jawatan?' · '+u.jawatan:''}</div></div>
+      <div class="ubts">
+        <button class="ubtn ubtn-e" onclick="editUser('${u.id}')">✏</button>
+        <button class="ubtn ubtn-d" onclick="delUser('${u.id}')" ${u.id===sess?.id?'disabled':''}>${u.id===sess?.id?'🔒':'🗑'}</button>
+      </div>
+    </div>`).join('')
+}
+function saveUser(){
+  const nm=sv('af-nm'),us=sv('af-us'),pw=sv('af-pw'),rl=sv('af-rl'),jw=sv('af-jw'),em=sv('af-em'),ed=sv('af-ed');
+  if(!nm||!us){showAM('❌ Nama dan username wajib.','ap-er');return}
+  let u=getU();
+  if(u.find(x=>x.username===us&&x.id!==ed)){showAM('❌ Username sudah digunakan.','ap-er');return}
+  if(ed){const i=u.findIndex(x=>x.id===ed);if(i!==-1){u[i]={...u[i],nama:nm,username:us,role:rl,jawatan:jw,email:em};if(pw)u[i].password=pw}showAM('✅ Pengguna dikemaskini!','ap-ok')}
+  else{if(!pw){showAM('❌ Kata laluan wajib untuk pengguna baru.','ap-er');return}u.push({id:'u'+Date.now(),nama:nm,username:us,password:pw,role:rl,jawatan:jw,email:em});showAM('✅ Pengguna ditambah!','ap-ok')}
+  saveU(u);renderUL();clearAF();
+}
+function editUser(id){const u=getU().find(x=>x.id===id);if(!u)return;document.getElementById('af-nm').value=u.nama;document.getElementById('af-us').value=u.username;document.getElementById('af-pw').value='';document.getElementById('af-rl').value=u.role;document.getElementById('af-jw').value=u.jawatan||'';document.getElementById('af-em').value=u.email||'';document.getElementById('af-ed').value=u.id;document.getElementById('apSB').textContent='💾 Kemaskini Pengguna'}
+function delUser(id){if(!confirm('Padam pengguna ini?'))return;const s=getSess();if(id===s?.id){alert('Tidak boleh padam akaun sendiri!');return}saveU(getU().filter(u=>u.id!==id));renderUL();showAM('✅ Pengguna dipadam.','ap-ok')}
+function clearAF(){['af-nm','af-us','af-pw','af-jw','af-em'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});document.getElementById('af-rl').value='user';document.getElementById('af-ed').value='';document.getElementById('apSB').textContent='💾 Simpan Pengguna'}
+function showAM(txt,cls){const e=document.getElementById('apMsg');e.textContent=txt;e.className='ap-msg '+cls;e.style.display='block';setTimeout(()=>e.style.display='none',3500)}
+
+/* ── NAV ── */
+function sp(page,el){document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));document.querySelectorAll('.tn').forEach(t=>t.classList.remove('on'));document.getElementById('pg-'+page).classList.add('on');el.classList.add('on');window.scrollTo({top:0,behavior:'smooth'})}
+function setGS(s,btn){S.gs=s;document.querySelectorAll('[id^=gs-]').forEach(b=>b.classList.remove('on'));btn.classList.add('on');rAll()}
+
+/* ── 3D ── */
+const p3D={id:'p3D',afterDatasetsDraw(c){if(!c._3D)return;const{ctx}=c;c.data.datasets.forEach((ds,di)=>{c.getDatasetMeta(di).data.forEach(bar=>{const{x,y,width,height}=bar;if(!width||!height)return;const d=6,a=.4,bc=ds.backgroundColor,col=Array.isArray(bc)?bc[0]||'#5B21B6':bc||'#5B21B6';ctx.save();ctx.beginPath();ctx.moveTo(x-width/2,y);ctx.lineTo(x-width/2+d,y-d*a);ctx.lineTo(x+width/2+d,y-d*a);ctx.lineTo(x+width/2,y);ctx.closePath();ctx.fillStyle=lco(col,.22);ctx.fill();ctx.beginPath();ctx.moveTo(x+width/2,y);ctx.lineTo(x+width/2+d,y-d*a);ctx.lineTo(x+width/2+d,y+height-d*a);ctx.lineTo(x+width/2,y+height);ctx.closePath();ctx.fillStyle=dko(col,.15);ctx.fill();ctx.restore()})})}};
+function lco(h,f){const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);return`rgba(${Math.min(255,Math.round(r+f*255))},${Math.min(255,Math.round(g+f*255))},${Math.min(255,Math.round(b+f*255))},.85)`}
+function dko(h,f){const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);return`rgba(${Math.max(0,Math.round(r-f*255))},${Math.max(0,Math.round(g-f*255))},${Math.max(0,Math.round(b-f*255))},.85)`}
+Chart.register(p3D);
+
+/* ── CHART HELPERS ── */
+function mkDL(mode,data,isPie,isLine,isRadar){
+  if(mode==='tiada')return{display:false};
+  const tot=data.reduce((a,b)=>a+(b||0),0)||1;
+  const dl={display:true,font:{weight:'700',size:10,family:'JetBrains Mono'},
+    formatter:v=>{if(!v&&v!==0)return'';const n=Number.isInteger(v)?v:parseFloat(v).toFixed(1),p=(v/tot*100).toFixed(1)+'%';if(mode==='peratus')return p;if(mode==='nilai')return n;if(mode==='kedua')return isPie?`${p}\n${n}`:`${n}\n${p}`;return n}};
+  if(isPie||isRadar){dl.color='#fff';dl.anchor='center';dl.align='center';dl.textStrokeColor='rgba(0,0,0,.5)';dl.textStrokeWidth=2.5}
+  else if(isLine){dl.color='var(--ink)';dl.anchor='end';dl.align='top';dl.offset=6;dl.backgroundColor='rgba(255,255,255,.92)';dl.borderRadius=5;dl.padding={top:2,bottom:2,left:5,right:5};dl.font={weight:'700',size:9,family:'JetBrains Mono'}}
+  else{dl.color='#fff';dl.anchor='end';dl.align='start';dl.offset=5;dl.textStrokeColor='rgba(0,0,0,.45)';dl.textStrokeWidth=2.5}
+  return dl;
+}
+function mkLeg(id,labels,colors,type){
+  const el=document.getElementById(id);if(!el)return;
+  const isPie=['pie','doughnut','polarArea'].includes(type),isLine=type==='line';
+  el.innerHTML=labels.map((lb,i)=>{const col=Array.isArray(colors)?colors[i%colors.length]:colors;const ind=isPie?`<span class="ls-d" style="background:${col}"></span>`:isLine?`<span class="ls-l" style="background:${col}"></span>`:`<span class="ls" style="background:${col}"></span>`;return`<span class="li">${ind}${lb}</span>`}).join('')
+}
+function bc(id,ctype,labels,datasets,opts={}){
+  dc(id);const ctx=document.getElementById(id)?.getContext('2d');if(!ctx)return;
+  const is3=ctype==='3dbar',rt=is3?'bar':ctype;
+  const isPie=['pie','doughnut','polarArea'].includes(rt),isLine=rt==='line',isRadar=rt==='radar';
+  const mode=opts.dlMode||'nilai';
+  const pDS=datasets.map((ds,i)=>{const m=Array.isArray(opts.dlMode)?opts.dlMode[i]||'nilai':mode;return{...ds,datalabels:mkDL(m,ds.data||[],isPie,isLine,isRadar)}});
+  if(opts.legId)mkLeg(opts.legId,opts.legLabels||labels,opts.legColors||datasets.map(d=>Array.isArray(d.backgroundColor)?d.backgroundColor[0]:d.backgroundColor||d.borderColor||'#888'),rt);
+  const scl=isPie||isRadar?{}:{scales:{x:{stacked:!!opts.s,grid:{color:'rgba(0,0,0,.04)'},ticks:{font:{size:10,family:'Outfit'},autoSkip:false,maxRotation:0,color:'var(--muted)'}},y:{stacked:!!opts.s,grid:{color:'rgba(0,0,0,.04)'},ticks:{font:{size:10,family:'JetBrains Mono',weight:'600'},color:'var(--muted)'},max:opts.max??100,min:0}}};
+  const ch=new Chart(ctx,{type:rt,data:{labels,datasets:pDS},options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:isPie||isRadar?8:28,right:is3?16:6,bottom:4,left:4}},plugins:{legend:{display:false},datalabels:{},...scl?{}:{}},...scl},plugins:is3?[p3D]:[]});
+  ch._3D=is3;CH[id]=ch;
+}
+function mkMR(id,cards){
+  const el=document.getElementById(id);if(!el)return;
+  el.innerHTML=cards.map(c=>`<div class="mmc" style="--mc-c:${c.color}"><div class="mml">${c.label}</div><div class="mmv">${c.value}</div>${c.sub?`<div class="mms">${c.sub}</div>`:''}</div>`).join('')
+}
+function mkKPI(id,bars){
+  const el=document.getElementById(id);if(!el)return;
+  el.innerHTML=bars.map(b=>{const c=kc(b.v);return`<div class="kbar"><div class="kbh"><span class="kbl">${b.l}</span><span class="kbv" style="color:${c}">${b.v.toFixed(1)}<span class="sbadge ${spill(b.v)}">${slbl(b.v)}</span></span></div><div class="kbt"><div class="kbf" style="width:${Math.min(100,b.v)}%;background:${c}"></div></div></div>`}).join('')
+}
+
+/* Palettes */
+const P={
+  v:['#4C1D95','#6D28D9','#7C3AED'],
+  a:['#1E3A8A','#1D4ED8','#2563EB','#3B82F6','#60A5FA','#1E3A8A','#1D4ED8'],
+  g:['#064E3B','#065F46','#059669','#10B981'],
+  g7:['#064E3B','#065F46','#059669','#10B981','#34D399','#6EE7B7','#A7F3D0'],
+  am:['#78350F','#92400E','#B45309','#D97706','#F59E0B','#FBBF24'],
+  r:['#7F1D1D','#991B1B','#B91C1C','#DC2626','#EF4444'],
+  iks:['#4C1D95','#1E3A8A','#064E3B'],
+  all:['#4C1D95','#1E3A8A','#064E3B','#78350F','#7F1D1D']
+};
+
+/* Form ↔ Data */
+const FM={s1:['i11','i12','i13'],s2:['i21','i22','i23','i24','i25','i26','i27'],
+  s31:['i311','i312','i313','i314'],s32:['i321','i322','i323','i324','i325','i326','i327'],
+  s33:['i331','i332','i333','i334','i335','i336','i337'],
+  s4:['i41','i42','i43','i44','i45','i46'],s5:['i51','i52','i53','i541','i542','i61','i62','i63']};
+
+function syncForm(std){
+  const yr=parseInt(document.getElementById('yr-'+std)?.value||'2024');
+  if(std==='s3'){['s31','s32','s33'].forEach(sub=>{const d=D[yr][sub];FM[sub].forEach(k=>{const el=document.getElementById('f-'+sub+'-'+k);if(el&&d)el.value=d[k]??''})});return}
+  const d=D[yr][std];if(!d)return;FM[std].forEach(k=>{const el=document.getElementById('f-'+std+'-'+k);if(el&&d[k]!==undefined)el.value=d[k]});
+}
+function saveRender(std){
+  const yr=parseInt(document.getElementById('yr-'+std)?.value||'2024');
+  if(std==='s3'){['s31','s32','s33'].forEach(sub=>{if(!D[yr][sub])D[yr][sub]={};FM[sub].forEach(k=>{const el=document.getElementById('f-'+sub+'-'+k);if(el)D[yr][sub][k]=parseFloat(el.value)||0})});rS3()}
+  else{if(!D[yr][std])D[yr][std]={};FM[std].forEach(k=>{const el=document.getElementById('f-'+std+'-'+k);if(el)D[yr][std][k]=parseFloat(el.value)||0});({'s1':rS1,'s2':rS2,'s4':rS4,'s5':rS5})[std]?.()}
+  rOV();
+}
+
+/* ── RENDER OVERVIEW ── */
+function rOV(){
+  const yr=parseInt(sv('yr-ov')||'2024');
+  const s1=g1(yr),s2=g2(yr),s31=g31(yr),s32=g32(yr),s33=g33(yr),s4=g4(yr),s5=g5(yr);
+  const s3=mn([s31.avg,s32.avg,s33.avg]);
+  const cards=[
+    {s:'S1',lbl:'Standard 1',val:s1.avg,name:'Kepimpinan',cls:'sc1',c:'#4C1D95'},
+    {s:'S2',lbl:'Standard 2',val:s2.avg,name:'Pengurusan',cls:'sc2',c:'#1E3A8A'},
+    {s:'S3',lbl:'Standard 3',val:s3,name:'Pengurusan Program',cls:'sc3',c:'#064E3B'},
+    {s:'S4',lbl:'Standard 4',val:s4.avg,name:'PdPc',cls:'sc4',c:'#78350F'},
+    {s:'S5',lbl:'Standard 5',val:s5.avg,name:'Kemenjadian',cls:'sc5',c:'#7F1D1D'}
+  ];
+  document.getElementById('sstrip').innerHTML=cards.map((c,i)=>{
+    let tr='';if(yr>2023){const py=yr-1;const pv=[g1(py).avg,g2(py).avg,mn([g31(py).avg,g32(py).avg,g33(py).avg]),g4(py).avg,g5(py).avg][i];const diff=c.val-pv;tr=`<div class="sc-trend"><div class="sc-arrow">${diff>0?'↑':diff<0?'↓':'→'}</div><div class="sc-diff">${diff>0?'+':''}${diff.toFixed(1)}</div></div>`}
+    return`<div class="scard ${c.cls}" data-s="${c.s}">${tr}<div class="sc-lbl">${c.lbl}</div><div class="sc-val">${c.val.toFixed(1)}</div><div class="sc-name">${c.name}</div></div>`}).join('');
+
+  const rt=tv('ovR'),allV=cards.map(c=>c.val);
+  if(rt==='radar'){bc('ovR','radar',['Std 1','Std 2','Std 3','Std 4','Std 5'],[{label:`Skor ${yr}`,data:allV,backgroundColor:'rgba(91,33,182,.15)',borderColor:'#5B21B6',borderWidth:2.5,pointBackgroundColor:'#5B21B6',pointRadius:6,pointBorderColor:'#fff',pointBorderWidth:2}],{dlMode:lv('ovR'),legId:'lg-ovR',legLabels:[`Skor ${yr}`],legColors:['#5B21B6']})}
+  else bc('ovR',rt,['S1 Kepimpinan','S2 Pengurusan','S3 Program','S4 PdPc','S5 Kemenjadian'],[{label:`Skor ${yr}`,data:allV,backgroundColor:P.all,borderRadius:8,borderWidth:2,borderColor:'rgba(255,255,255,.35)'}],{dlMode:lv('ovR'),max:100,legId:'lg-ovR',legLabels:cards.map(c=>c.name),legColors:P.all});
+
+  const yrs=[2023,2024,2025],tt=tv('ovT');
+  const tDS=cards.map((c,i)=>({label:c.lbl,data:yrs.map(y=>{const a=[g1(y),g2(y),[g31(y),g32(y),g33(y)],g4(y),g5(y)];return parseFloat((i===2?mn([a[2][0].avg,a[2][1].avg,a[2][2].avg]):a[i].avg).toFixed(2))}).map(Number),borderColor:c.c,backgroundColor:tt==='line'?c.c.replace(/$/,'18'):''+c.c,fill:false,tension:.4,pointRadius:5,pointBackgroundColor:c.c,pointBorderColor:'#fff',pointBorderWidth:2,borderRadius:6,borderWidth:2.5}));
+  bc('ovT',tt,yrs.map(String),tDS,{dlMode:Array(5).fill(lv('ovT')),max:100,legId:'lg-ovT',legLabels:cards.map(c=>c.name),legColors:P.all});
+
+  const tbl=document.getElementById('ovTbl');
+  tbl.innerHTML='<thead><tr><th>Standard</th>'+yrs.map(y=>`<th>${y}</th>`).join('')+'<th>Trend</th><th>Status</th></tr></thead><tbody>'+
+  cards.map((c,si)=>{const vals=yrs.map(y=>{const a=[g1(y),g2(y),[g31(y),g32(y),g33(y)],g4(y),g5(y)];return si===2?mn([a[2][0].avg,a[2][1].avg,a[2][2].avg]):a[si].avg});const lat=vals[vals.length-1],prev=vals[vals.length-2];
+  return`<tr><td><strong style="color:${c.c}">${c.lbl}</strong><br><span style="font-size:10px;color:var(--muted)">${c.name}</span></td>${vals.map(v=>`<td><span class="spill-sm ${spilltbl(v)}" style="border:none">${v.toFixed(1)}</span></td>`).join('')}<td style="font-weight:800;color:${kc(lat)};font-family:'JetBrains Mono',monospace">${ta(lat,prev)}</td><td><span class="spill-sm ${spilltbl(lat)}" style="border:none">${slbl(lat)}</span></td></tr>`}).join('')+'</tbody>';
+}
+
+/* ── S1 ── */
+function rS1(){
+  const yr=parseInt(sv('yr-s1')||'2024');syncForm('s1');
+  const d=g1(yr);
+  mkMR('mr-s1',[{label:'Skor S1',value:d.avg.toFixed(1),color:'#4C1D95',sub:slbl(d.avg)},{label:'1.1 Peneraju',value:d.i11.toFixed(1),color:'#6D28D9'},{label:'1.2 Pembimbing',value:d.i12.toFixed(1),color:'#7C3AED'},{label:'1.3 Pendorong',value:d.i13.toFixed(1),color:'#4C1D95'}]);
+  bc('s1B',tv('s1B'),['1.1 Peneraju','1.2 Pembimbing','1.3 Pendorong'],[{label:'Skor',data:[d.i11,d.i12,d.i13],backgroundColor:P.v,borderRadius:9,borderWidth:2,borderColor:'rgba(255,255,255,.35)'}],{dlMode:lv('s1B'),max:100,legId:'lg-s1B',legLabels:['1.1','1.2','1.3'],legColors:P.v});
+  const tt=tv('s1T'),yrs=[2023,2024,2025];
+  bc('s1T',tt,yrs.map(String),[
+    {label:'1.1 Peneraju',data:yrs.map(y=>D[y].s1.i11),borderColor:'#4C1D95',backgroundColor:'rgba(76,29,149,.08)',fill:tt==='line',tension:.4,pointRadius:5,pointBackgroundColor:'#4C1D95',pointBorderColor:'#fff',pointBorderWidth:2,borderRadius:6,borderWidth:2.5},
+    {label:'1.2 Pembimbing',data:yrs.map(y=>D[y].s1.i12),borderColor:'#6D28D9',backgroundColor:'rgba(109,40,217,.08)',fill:tt==='line',tension:.4,pointRadius:5,pointBackgroundColor:'#6D28D9',pointBorderColor:'#fff',pointBorderWidth:2,borderRadius:6,borderWidth:2.5},
+    {label:'1.3 Pendorong',data:yrs.map(y=>D[y].s1.i13),borderColor:'#7C3AED',backgroundColor:'rgba(124,58,237,.08)',fill:tt==='line',tension:.4,pointRadius:5,pointBackgroundColor:'#7C3AED',pointBorderColor:'#fff',pointBorderWidth:2,borderRadius:6,borderWidth:2.5}
+  ],{dlMode:Array(3).fill(lv('s1T')),max:100,legId:'lg-s1T',legLabels:['1.1 Peneraju','1.2 Pembimbing','1.3 Pendorong'],legColors:P.v});
+  mkKPI('kpi-s1',[{l:'1.1 PGB Sebagai Peneraju',v:d.i11},{l:'1.2 PGB Sebagai Pembimbing',v:d.i12},{l:'1.3 PGB Sebagai Pendorong',v:d.i13}]);
+}
+
+/* ── S2 ── */
+function rS2(){
+  const yr=parseInt(sv('yr-s2')||'2024');syncForm('s2');
+  const d=g2(yr);
+  mkMR('mr-s2',[{label:'Skor S2',value:d.avg.toFixed(1),color:'#1E3A8A',sub:slbl(d.avg)},{label:'2.1 Sumber Manusia',value:d.i21.toFixed(1),color:'#1D4ED8'},{label:'2.5 Iklim',value:d.i25.toFixed(1),color:'#2563EB'},{label:'2.6 Perpaduan',value:d.i26.toFixed(1),color:'#1E3A8A'}]);
+  const labs=['2.1 Sumber Manusia','2.2 Aset','2.3 Kewangan','2.4 Sumber Pend.','2.5 Iklim','2.6 Perpaduan','2.7 Permuafakatan'];
+  const vals=[d.i21,d.i22,d.i23,d.i24,d.i25,d.i26,d.i27];
+  bc('s2B',tv('s2B'),labs,[{label:'Skor S2',data:vals,backgroundColor:P.a,borderRadius:8,borderWidth:2,borderColor:'rgba(255,255,255,.35)'}],{dlMode:lv('s2B'),max:100,legId:'lg-s2B',legLabels:labs,legColors:P.a});
+  mkKPI('kpi-s2',labs.map((l,i)=>({l,v:vals[i]})));
+}
+
+/* ── S3 ── */
+function rS3(){
+  const yr=parseInt(sv('yr-s3')||'2024');syncForm('s3');
+  const d31=g31(yr),d32=g32(yr),d33=g33(yr),s3=mn([d31.avg,d32.avg,d33.avg]);
+  mkMR('mr-s3',[{label:'Skor 3.1',value:d31.avg.toFixed(1),color:'#064E3B',sub:slbl(d31.avg)},{label:'Skor 3.2',value:d32.avg.toFixed(1),color:'#065F46'},{label:'Skor 3.3',value:d33.avg.toFixed(1),color:'#059669'},{label:'Avg S3',value:s3.toFixed(1),color:'#064E3B',sub:'Keseluruhan'}]);
+  bc('s31B',tv('s31B'),['3.1.1 Pelaksanaan','3.1.2 Mata Pelajaran','3.1.3 Masa Instruk.','3.1.4 Penilaian'],[{label:'Skor 3.1',data:[d31.i311,d31.i312,d31.i313,d31.i314],backgroundColor:P.g,borderRadius:8,borderWidth:2,borderColor:'rgba(255,255,255,.35)'}],{dlMode:lv('s31B'),max:100,legId:'lg-s31B',legLabels:['3.1.1','3.1.2','3.1.3','3.1.4'],legColors:P.g});
+  const l32=['Pelaksanaan','Kelab/Persatuan','Beruniform','Sukan','Kecemerlangan','Sukan Semua','Pentaksiran'];
+  bc('s32B',tv('s32B'),l32,[{label:'Skor 3.2',data:[d32.i321,d32.i322,d32.i323,d32.i324,d32.i325,d32.i326,d32.i327],backgroundColor:P.g7,borderRadius:7,borderWidth:2,borderColor:'rgba(255,255,255,.35)'}],{dlMode:lv('s32B'),max:100,legId:'lg-s32B',legLabels:l32,legColors:P.g7});
+  const l33=['Pelaksanaan HEM','Disiplin','Keselamatan','Kesihatan','Bantuan','Bimbingan','Psikometrik'];
+  bc('s33B',tv('s33B'),l33,[{label:'Skor 3.3',data:[d33.i331,d33.i332,d33.i333,d33.i334,d33.i335,d33.i336,d33.i337],backgroundColor:P.g7,borderRadius:7,borderWidth:2,borderColor:'rgba(255,255,255,.35)'}],{dlMode:lv('s33B'),max:100,legId:'lg-s33B',legLabels:l33,legColors:P.g7});
+}
+
+/* ── S4 ── */
+function rS4(){
+  const yr=parseInt(sv('yr-s4')||'2024');syncForm('s4');
+  const d=g4(yr);
+  mkMR('mr-s4',[{label:'Skor S4',value:d.avg.toFixed(1),color:'#78350F',sub:slbl(d.avg)},{label:'4.1 Perancang',value:d.i41.toFixed(1),color:'#B45309'},{label:'4.6 Murid Aktif',value:d.i46.toFixed(1),color:'#D97706'},{label:'4.3 Pembimbing',value:d.i43.toFixed(1),color:'#78350F'}]);
+  const labs=['4.1 Perancang','4.2 Pengawal','4.3 Pembimbing','4.4 Pendorong','4.5 Penilai','4.6 Murid Aktif'];
+  const vals=[d.i41,d.i42,d.i43,d.i44,d.i45,d.i46];
+  bc('s4B',tv('s4B'),labs,[{label:'Skor S4',data:vals,backgroundColor:P.am,borderRadius:8,borderWidth:2,borderColor:'rgba(255,255,255,.35)'}],{dlMode:lv('s4B'),max:100,legId:'lg-s4B',legLabels:labs,legColors:P.am});
+  mkKPI('kpi-s4',labs.map((l,i)=>({l,v:vals[i]})));
+}
+
+/* ── S5 ── */
+function rS5(){
+  const yr=parseInt(sv('yr-s5')||'2024');syncForm('s5');
+  const d=g5(yr);
+  mkMR('mr-s5',[{label:'Skor S5',value:d.avg.toFixed(1),color:'#7F1D1D',sub:slbl(d.avg)},{label:'5.1 Akademik',value:d.i51.toFixed(1),color:'#B91C1C'},{label:'5.4.1 Guru',value:d.i541.toFixed(1),color:'#DC2626'},{label:'5.4.2 Sekolah',value:d.i542.toFixed(1),color:'#7F1D1D'}]);
+  const l5=['5.1 Akademik','5.2 Kokurikulum','5.3 Sahsiah','5.4.1 Guru','5.4.2 Sekolah'];
+  bc('s5B',tv('s5B'),l5,[{label:'Skor S5',data:[d.i51,d.i52,d.i53,d.i541,d.i542],backgroundColor:P.r,borderRadius:8,borderWidth:2,borderColor:'rgba(255,255,255,.35)'}],{dlMode:lv('s5B'),max:100,legId:'lg-s5B',legLabels:l5,legColors:P.r});
+  bc('s5I',tv('s5I'),['6.1 Kekuatan','6.2 Pengurusan','6.3 Pencapaian'],[{data:[D[yr].s5.i61,D[yr].s5.i62,D[yr].s5.i63],backgroundColor:P.iks,borderWidth:2,borderColor:'rgba(255,255,255,.35)'}],{dlMode:lv('s5I'),legId:'lg-s5I',legLabels:['6.1 Kekuatan','6.2 Pengurusan','6.3 Pencapaian'],legColors:P.iks});
+}
+function rAll(){rOV();rS1();rS2();rS3();rS4();rS5()}
+
+/* ── DL ── */
+function openDL(id){DLS.id=id;document.getElementById('dlTitle').textContent='Muat Turun — '+(gt(id)||id);document.getElementById('dlMod').classList.add('open')}
+function closeDL(){document.getElementById('dlMod').classList.remove('open')}
+function dlPNG(){
+  const ch=CH[DLS.id];if(!ch)return;const title=gt(DLS.id)||DLS.id;
+  const oc=document.createElement('canvas');oc.width=900;oc.height=580;
+  const ctx=oc.getContext('2d');ctx.fillStyle='#FAFAFA';ctx.fillRect(0,0,900,580);
+  const gr=ctx.createLinearGradient(0,0,900,0);gr.addColorStop(0,'#0D0D14');gr.addColorStop(1,'#4C1D95');
+  ctx.fillStyle=gr;ctx.fillRect(0,0,900,66);ctx.fillStyle='#fff';
+  ctx.font='bold 16px Outfit,sans-serif';ctx.fillText('SKPM Pro',16,28);
+  ctx.fillStyle='rgba(255,255,255,.55)';ctx.font='12px Outfit,sans-serif';
+  ctx.fillText(S.school.name,16,46);ctx.fillText(title,16,62);
+  const ci=new Image();ci.onload=()=>{ctx.drawImage(ci,10,76,880,494);const a=document.createElement('a');a.href=oc.toDataURL('image/png');a.download=(title+'.png').replace(/\s+/g,'_');a.click();closeDL()};ci.src=ch.toBase64Image();
+}
+function dlCSV(){
+  const ch=CH[DLS.id];if(!ch)return;const title=gt(DLS.id)||DLS.id;
+  let csv=`"${S.school.name}"\n"SKPM Pro · ${title}"\n\nLabel,`+ch.data.datasets.map(d=>'"'+(d.label||'Data')+'"').join(',')+'\n';
+  ch.data.labels.forEach((lb,i)=>{csv+='"'+lb+'",'+ch.data.datasets.map(d=>d.data?.[i]??'').join(',')+'\n'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));a.download=(title+'.csv').replace(/\s+/g,'_');a.click();closeDL();
+}
+function dlPDF(){
+  const ch=CH[DLS.id];if(!ch)return;const title=gt(DLS.id)||DLS.id;
+  const lh=S.school.logo?`<img src="${S.school.logo}" style="width:48px;height:48px;border-radius:50%;object-fit:cover;margin-right:12px;border:2px solid #A78BFA">`:' <span style="font-size:28px;margin-right:12px">⭐</span>';
+  const h=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${title}</title><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&display=swap" rel="stylesheet"><style>body{font-family:Outfit,sans-serif;margin:36px;color:#0D0D14}.hdr{border-bottom:3px solid #5B21B6;padding-bottom:12px;margin-bottom:24px;display:flex;align-items:center}h1{font-size:16px;font-weight:800;margin:0}p{font-size:11px;color:#8888A0;margin:4px 0 0}img.ci{max-width:100%;border-radius:12px;border:1px solid rgba(0,0,0,.08);box-shadow:0 4px 16px rgba(0,0,0,.06)}</style></head><body><div class="hdr">${lh}<div><h1>${S.school.name}</h1><p>SKPM Pro · ${title} · ${new Date().toLocaleDateString('ms-MY',{day:'2-digit',month:'long',year:'numeric'})}</p></div></div><img class="ci" src="${ch.toBase64Image()}"></body></html>`;
+  const w=window.open('','_blank');w.document.write(h);w.document.close();setTimeout(()=>w.print(),700);closeDL();
+}
+
+/* ── PDF EXPORT ── */
+function exportPDF(){
+  const prog=document.getElementById('eprog');prog.style.display='block';prog.textContent='⏳ Menyediakan laporan SKPM Pro...';
+  setTimeout(()=>{
+    const sn=S.school.name,pgb=S.school.pgb||'-',now=new Date().toLocaleDateString('ms-MY',{day:'2-digit',month:'long',year:'numeric'});
+    const incC=document.getElementById('pdf-ch').checked;
+    const addC=(cid)=>{if(!incC||!CH[cid])return'';const t=gt(cid)||'';return`<div class="cb">${t?`<div class="ct2">${t}</div>`:''}<img class="ci" src="${CH[cid].toBase64Image()}"></div>`};
+    const lh=S.school.logo?`<img src="${S.school.logo}" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,.5);margin-right:18px;flex-shrink:0">`:'<span style="font-size:44px;margin-right:18px">⭐</span>';
+    const yr=parseInt(sv('yr-ov')||'2024');
+    const s1=g1(yr),s2=g2(yr),s31=g31(yr),s32=g32(yr),s33=g33(yr),s4=g4(yr),s5=g5(yr);
+    let html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>SKPM Pro ${sn}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Outfit,sans-serif;background:#fff;color:#0D0D14;font-size:11px}
+    .hdr{background:linear-gradient(135deg,#0D0D14,#4C1D95);color:#fff;padding:22px 26px;margin-bottom:28px;display:flex;align-items:center}
+    .hi{flex:1}.hb{font-size:11px;font-weight:700;opacity:.6;margin-bottom:4px;text-transform:uppercase;letter-spacing:.07em}
+    .hdr h1{font-size:21px;font-weight:800;margin-bottom:4px;letter-spacing:-.5px}.hdr p{font-size:10px;opacity:.6}
+    .sec{margin:0 22px 28px}.sec-t{font-size:12px;font-weight:800;color:#fff;padding:7px 16px;border-radius:99px;margin-bottom:16px;display:inline-flex;align-items:center;gap:6px}
+    .t1{background:linear-gradient(90deg,#4C1D95,#6D28D9)}.t2{background:linear-gradient(90deg,#1E3A8A,#2563EB)}.t3{background:linear-gradient(90deg,#064E3B,#10B981)}.t4{background:linear-gradient(90deg,#78350F,#D97706)}.t5{background:linear-gradient(90deg,#7F1D1D,#DC2626)}
+    .mrow{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+    .mc{background:#FAFAFA;border-radius:10px;padding:10px 12px;border-left:4px solid #4C1D95}
+    .ml{font-size:8px;color:#8888A0;margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+    .mv{font-size:17px;font-weight:800;font-family:"JetBrains Mono",monospace}
+    table{width:100%;border-collapse:collapse;font-size:10px;margin-bottom:16px}
+    th{background:#0D0D14;color:#fff;padding:7px 10px;text-align:left;font-weight:700;font-size:9.5px;text-transform:uppercase;letter-spacing:.05em}
+    td{padding:6px 10px;border-bottom:1px solid rgba(0,0,0,.06);font-weight:500}tr:nth-child(even) td{background:#FAFAFA}
+    .cb{margin-bottom:20px}.ct2{font-size:11px;font-weight:800;color:#0D0D14;margin-bottom:6px;padding:6px 14px;background:#F5F0FF;border-radius:8px;border-left:3px solid #4C1D95}
+    .ci{width:100%;max-height:230px;object-fit:contain;border-radius:10px;border:1px solid rgba(0,0,0,.08);box-shadow:0 2px 8px rgba(0,0,0,.06)}
+    .badge{display:inline-flex;font-size:9px;padding:2px 8px;border-radius:99px;font-weight:700;font-family:"JetBrains Mono",monospace}
+    .bex{background:#ECFDF5;color:#065F46}.bok{background:#EFF6FF;color:#1E3A8A}.bw{background:#FFFBEB;color:#78350F}.bb{background:#FFF5F5;color:#7F1D1D}
+    .ft{text-align:center;padding:20px;color:#8888A0;font-size:10px;border-top:1px solid rgba(0,0,0,.06);margin:0 22px}
+    @media print{.sec{page-break-inside:avoid}}</style></head><body>
+    <div class="hdr">${lh}<div class="hi"><div class="hb">SKPM Pro · Laporan Kualiti Pengurusan Sekolah · Tahun ${yr}</div><h1>${sn}</h1><p>${[S.school.jenis,S.school.daerah,S.school.kod].filter(Boolean).join(' · ')||'Dashboard SKPM'} &nbsp;·&nbsp; PGB: ${pgb} &nbsp;·&nbsp; ${now}</p></div></div>`;
+
+    const mkSec=(title,cls,items,charts)=>`<div class="sec"><div class="sec-t ${cls}">${title}</div><table><tr><th>Item</th><th>Skor</th><th>Status</th></tr>${items.map(it=>`<tr><td>${it.l}</td><td class="mv" style="font-family:'JetBrains Mono',monospace;font-size:13px"><strong>${it.v.toFixed(1)}</strong></td><td><span class="badge ${it.v>=90?'bex':it.v>=80?'bok':it.v>=60?'bw':'bb'}">${slbl(it.v)}</span></td></tr>`).join('')}</table>${charts}</div>`;
+
+    if(document.getElementById('pdf-s1').checked)html+=mkSec('👑 Standard 1 — Kepimpinan','t1',[{l:'1.1 PGB Sebagai Peneraju',v:s1.i11},{l:'1.2 PGB Sebagai Pembimbing',v:s1.i12},{l:'1.3 PGB Sebagai Pendorong',v:s1.i13},{l:'Purata Standard 1',v:s1.avg}],addC('s1B')+addC('s1T'));
+    if(document.getElementById('pdf-s2').checked)html+=mkSec('⚙️ Standard 2 — Pengurusan','t2',[{l:'2.1 Sumber Manusia',v:s2.i21},{l:'2.2 Aset',v:s2.i22},{l:'2.3 Kewangan',v:s2.i23},{l:'2.4 Sumber Pendidikan',v:s2.i24},{l:'2.5 Iklim',v:s2.i25},{l:'2.6 Perpaduan',v:s2.i26},{l:'2.7 Permuafakatan',v:s2.i27},{l:'Purata Standard 2',v:s2.avg}],addC('s2B'));
+    if(document.getElementById('pdf-s3').checked){
+      html+=mkSec('📚 Standard 3.1 — Kurikulum','t3',[{l:'3.1.1 Pelaksanaan',v:s31.i311},{l:'3.1.2 Mata Pelajaran',v:s31.i312},{l:'3.1.3 Masa Instruksional',v:s31.i313},{l:'3.1.4 Penilaian Murid',v:s31.i314},{l:'Purata 3.1',v:s31.avg}],addC('s31B'));
+      html+=mkSec('🏅 Standard 3.2 — Kokurikulum','t3',[{l:'3.2.1 Pelaksanaan',v:s32.i321},{l:'3.2.2 Kelab/Persatuan',v:s32.i322},{l:'3.2.3 Beruniform',v:s32.i323},{l:'3.2.4 Sukan',v:s32.i324},{l:'3.2.5 Kecemerlangan',v:s32.i325},{l:'3.2.6 Sukan Semua',v:s32.i326},{l:'3.2.7 Pentaksiran',v:s32.i327},{l:'Purata 3.2',v:s32.avg}],addC('s32B'));
+      html+=mkSec('👥 Standard 3.3 — HEM','t3',[{l:'3.3.1 Pelaksanaan HEM',v:s33.i331},{l:'3.3.2 Disiplin',v:s33.i332},{l:'3.3.3 Keselamatan',v:s33.i333},{l:'3.3.4 Kesihatan',v:s33.i334},{l:'3.3.5 Bantuan Pelajaran',v:s33.i335},{l:'3.3.6 Bimbingan',v:s33.i336},{l:'3.3.7 Psikometrik',v:s33.i337},{l:'Purata 3.3',v:s33.avg}],addC('s33B'));
+    }
+    if(document.getElementById('pdf-s4').checked)html+=mkSec('👩‍🏫 Standard 4 — PdPc','t4',[{l:'4.1 Guru Perancang',v:s4.i41},{l:'4.2 Guru Pengawal',v:s4.i42},{l:'4.3 Guru Pembimbing',v:s4.i43},{l:'4.4 Guru Pendorong',v:s4.i44},{l:'4.5 Guru Penilai',v:s4.i45},{l:'4.6 Murid Aktif',v:s4.i46},{l:'Purata Standard 4',v:s4.avg}],addC('s4B'));
+    if(document.getElementById('pdf-s5').checked)html+=mkSec('🎓 Standard 5 — Kemenjadian','t5',[{l:'5.1 Kemenjadian Akademik',v:s5.i51},{l:'5.2 Kemenjadian Kokurikulum',v:s5.i52},{l:'5.3 Kemenjadian Sahsiah',v:s5.i53},{l:'5.4.1 Pencapaian Guru',v:s5.i541},{l:'5.4.2 Pencapaian Sekolah',v:s5.i542}],addC('s5B')+addC('s5I'));
+    html+=`<div class="sec">${addC('ovR')}${addC('ovT')}</div>`;
+    html+=`<div class="ft">SKPM Pro · Sistem Kualiti Pengurusan Sekolah Malaysia · Dijana pada ${now}</div></body></html>`;
+    const blob=new Blob([html],{type:'text/html'});const url=URL.createObjectURL(blob);
+    const win=window.open(url,'_blank');if(win)setTimeout(()=>{win.print();URL.revokeObjectURL(url)},1100);
+    else{const a=document.createElement('a');a.href=url;a.download=`SKPM_Pro_${sn.replace(/\s+/g,'_')}.html`;a.click();URL.revokeObjectURL(url)}
+    prog.textContent='✅ Berjaya! Ctrl+P → Save as PDF';setTimeout(()=>{prog.style.display='none'},5000);
+  },900);
+}
+
+/* ── INIT ── */
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('loginBtn')?.addEventListener('click',doLogin);
+  document.getElementById('lf-p')?.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
+  document.getElementById('lf-u')?.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('lf-p').focus()});
+  const sess=getSess();
+  if(sess){document.getElementById('loginOverlay').classList.add('gone');applySession(sess)}
+  ['s1','s2','s3','s4','s5'].forEach(s=>syncForm(s));
+  rAll();
+});
+</script>
+</body>
+</html>
