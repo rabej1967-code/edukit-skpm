@@ -336,8 +336,7 @@ input[type=file].fi{display:none}
         <div class="afu-col afu-full"><div class="afu-lbl">Nama Penuh</div><input class="afu-inp" id="af-nm" placeholder="Nama penuh"></div>
         <div class="afu-col"><div class="afu-lbl">Username</div><input class="afu-inp" id="af-us" placeholder="username"></div>
         <div class="afu-col"><div class="afu-lbl">Kata Laluan</div>
-          <div style="position:relative"><input class="afu-inp" id="af-pw" type="password" placeholder="kata laluan" style="padding-right:34px">
-          <button onclick="tAPw()" style="position:absolute;right:9px;top:9px;background:none;border:none;cursor:pointer;font-size:13px;color:var(--muted)">👁</button></div>
+          <div style="font-size:10.5px;color:var(--muted);padding:8px 0">Dijana automatik — dipaparkan selepas simpan.</div>
         </div>
         <div class="afu-col"><div class="afu-lbl">Peranan</div>
           <select class="afu-sel" id="af-rl"><option value="admin">👑 Admin</option><option value="user" selected>✏️ Pengguna</option><option value="view">👁 Tontonan</option></select>
@@ -379,6 +378,7 @@ input[type=file].fi{display:none}
   </div>
   <div class="hdr-acts">
     <button class="hbtn hbtn-adm" id="adminBtn" onclick="openAP()" style="display:none">⚙ Admin</button>
+    <button class="hbtn" id="saveBtn" onclick="saveAllData(false)" title="Simpan semua data ke localStorage">💾 Simpan</button>
     <button class="hbtn" onclick="openSM()">✏ Edit</button>
     <button class="hbtn hbtn-out" onclick="doLogout()" title="Log Keluar">⏏</button>
   </div>
@@ -399,7 +399,7 @@ input[type=file].fi{display:none}
 <!-- OVERVIEW -->
 <div class="pg on" id="pg-ov">
   <div class="ph"><div class="ph-l"><div class="ph-t">Dashboard SKPM</div><div class="ph-s">Skor Kualiti Pengurusan Sekolah Malaysia</div></div>
-  <select class="yr-sel" id="yr-ov" onchange="rAll()"><option value="2023">2023</option><option value="2024" selected>2024</option><option value="2025">2025</option></select></div>
+  <select class="yr-sel" id="yr-ov" onchange="rAll()"><option value="2023">2023</option><option value="2024" selected>2024</option><option value="2025">2025</option></select><button class="hbtn" style="padding:4px 9px;font-size:11px;margin-left:6px;white-space:nowrap" onclick="addYearPrompt()" title="Tambah tahun baru">+ Tahun</button><button class="hbtn" style="padding:4px 9px;font-size:11px;margin-left:4px;white-space:nowrap;color:#B91C1C;border-color:#B91C1C" onclick="delYearPrompt()" title="Padam tahun sedia ada">🗑 Padam</button></div>
   <div class="sstrip" id="sstrip"></div>
   <div class="card">
     <div class="chd"><div class="ctw"><input class="cttl ct1" id="ti-ovR" value="Prestasi Semua Standard" onfocus="this.select()"><div class="edit-h">✏ Klik untuk edit tajuk</div></div>
@@ -424,7 +424,7 @@ input[type=file].fi{display:none}
 <!-- S1 -->
 <div class="pg" id="pg-s1">
   <div class="ph"><div class="ph-l"><div class="ph-t">Standard 1</div><div class="ph-s">Kepimpinan — PGB Sebagai Peneraju, Pembimbing & Pendorong</div></div>
-  <select class="yr-sel" id="yr-s1" onchange="syncForm('s1');rS1()"><option value="2023">2023</option><option value="2024" selected>2024</option><option value="2025">2025</option></select></div>
+  <select class="yr-sel" id="yr-s1" onchange="syncForm('s1');rS1()"><option value="2023">2023</option><option value="2024" selected>2024</option><option value="2025">2025</option></select><button class="hbtn" style="padding:4px 9px;font-size:11px;margin-left:6px;white-space:nowrap" onclick="addYearPrompt()" title="Tambah tahun baru">+ Tahun</button><button class="hbtn" style="padding:4px 9px;font-size:11px;margin-left:4px;white-space:nowrap;color:#B91C1C;border-color:#B91C1C" onclick="delYearPrompt()" title="Padam tahun sedia ada">🗑 Padam</button></div>
   <div class="ic"><div class="ic-t">👑 Kemaskini Skor Standard 1</div>
   <div class="ic-s">KEPIMPINAN</div>
   <div class="igrid">
@@ -457,7 +457,7 @@ input[type=file].fi{display:none}
 <!-- S2 -->
 <div class="pg" id="pg-s2">
   <div class="ph"><div class="ph-l"><div class="ph-t">Standard 2</div><div class="ph-s">Pengurusan — Sumber, Aset, Kewangan, Iklim & Perpaduan</div></div>
-  <select class="yr-sel" id="yr-s2" onchange="syncForm('s2');rS2()"><option value="2023">2023</option><option value="2024" selected>2024</option><option value="2025">2025</option></select></div>
+  <select class="yr-sel" id="yr-s2" onchange="syncForm('s2');rS2()"><option value="2023">2023</option><option value="2024" selected>2024</option><option value="2025">2025</option></select><button class="hbtn" style="padding:4px 9px;font-size:11px;margin-left:6px;white-space:nowrap" onclick="addYearPrompt()" title="Tambah tahun baru">+ Tahun</button><button class="hbtn" style="padding:4px 9px;font-size:11px;margin-left:4px;white-space:nowrap;color:#B91C1C;border-color:#B91C1C" onclick="delYearPrompt()" title="Padam tahun sedia ada">🗑 Padam</button></div>
   <div class="ic"><div class="ic-t">⚙️ Kemaskini Skor Standard 2</div>
   <div class="ic-s">PENGURUSAN</div>
   <div class="igrid">
@@ -487,7 +487,7 @@ input[type=file].fi{display:none}
 <!-- S3 -->
 <div class="pg" id="pg-s3">
   <div class="ph"><div class="ph-l"><div class="ph-t">Standard 3</div><div class="ph-s">Pengurusan Kurikulum, Kokurikulum & HEM</div></div>
-  <select class="yr-sel" id="yr-s3" onchange="syncForm('s3');rS3()"><option value="2023">2023</option><option value="2024" selected>2024</option><option value="2025">2025</option></select></div>
+  <select class="yr-sel" id="yr-s3" onchange="syncForm('s3');rS3()"><option value="2023">2023</option><option value="2024" selected>2024</option><option value="2025">2025</option></select><button class="hbtn" style="padding:4px 9px;font-size:11px;margin-left:6px;white-space:nowrap" onclick="addYearPrompt()" title="Tambah tahun baru">+ Tahun</button><button class="hbtn" style="padding:4px 9px;font-size:11px;margin-left:4px;white-space:nowrap;color:#B91C1C;border-color:#B91C1C" onclick="delYearPrompt()" title="Padam tahun sedia ada">🗑 Padam</button></div>
   <div class="ic"><div class="ic-t">📚 Kemaskini Skor Standard 3</div>
   <div class="ic-s">3.1 PENGURUSAN KURIKULUM</div>
   <div class="igrid">
@@ -544,7 +544,7 @@ input[type=file].fi{display:none}
 <!-- S4 -->
 <div class="pg" id="pg-s4">
   <div class="ph"><div class="ph-l"><div class="ph-t">Standard 4</div><div class="ph-s">Pembelajaran & Pemudahcaraan (PdPc)</div></div>
-  <select class="yr-sel" id="yr-s4" onchange="syncForm('s4');rS4()"><option value="2023">2023</option><option value="2024" selected>2024</option><option value="2025">2025</option></select></div>
+  <select class="yr-sel" id="yr-s4" onchange="syncForm('s4');rS4()"><option value="2023">2023</option><option value="2024" selected>2024</option><option value="2025">2025</option></select><button class="hbtn" style="padding:4px 9px;font-size:11px;margin-left:6px;white-space:nowrap" onclick="addYearPrompt()" title="Tambah tahun baru">+ Tahun</button><button class="hbtn" style="padding:4px 9px;font-size:11px;margin-left:4px;white-space:nowrap;color:#B91C1C;border-color:#B91C1C" onclick="delYearPrompt()" title="Padam tahun sedia ada">🗑 Padam</button></div>
   <div class="ic"><div class="ic-t">👩‍🏫 Kemaskini Skor Standard 4</div>
   <div class="ic-s">PEMBELAJARAN & PEMUDAHCARAAN</div>
   <div class="igrid">
@@ -573,7 +573,7 @@ input[type=file].fi{display:none}
 <!-- S5 -->
 <div class="pg" id="pg-s5">
   <div class="ph"><div class="ph-l"><div class="ph-t">Standard 5</div><div class="ph-s">Kemenjadian Murid, Pencapaian & Indeks Kualiti Sekolah (IKS)</div></div>
-  <select class="yr-sel" id="yr-s5" onchange="syncForm('s5');rS5()"><option value="2023">2023</option><option value="2024" selected>2024</option><option value="2025">2025</option></select></div>
+  <select class="yr-sel" id="yr-s5" onchange="syncForm('s5');rS5()"><option value="2023">2023</option><option value="2024" selected>2024</option><option value="2025">2025</option></select><button class="hbtn" style="padding:4px 9px;font-size:11px;margin-left:6px;white-space:nowrap" onclick="addYearPrompt()" title="Tambah tahun baru">+ Tahun</button><button class="hbtn" style="padding:4px 9px;font-size:11px;margin-left:4px;white-space:nowrap;color:#B91C1C;border-color:#B91C1C" onclick="delYearPrompt()" title="Padam tahun sedia ada">🗑 Padam</button></div>
   <div class="ic"><div class="ic-t">🎓 Kemaskini Skor Standard 5</div>
   <div class="ic-s">KEMENJADIAN & PENCAPAIAN</div>
   <div class="igrid">
@@ -610,6 +610,20 @@ input[type=file].fi{display:none}
 <!-- EKSPORT -->
 <div class="pg" id="pg-ex">
   <div class="ph"><div class="ph-l"><div class="ph-t">Eksport & Laporan</div><div class="ph-s">Muat turun data & jana laporan PDF profesional</div></div></div>
+  <div class="ec"><div class="et">💾 Data Tempatan (localStorage)</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:.75rem;font-weight:500">Semua skor, maklumat sekolah &amp; tetapan carta disimpan terus pada peranti/pelayar ini — tidak perlu server, jadi <strong>tiada risiko "sleep"</strong> walau berhari-hari tidak dibuka. Sistem auto-simpan setiap kali borang dikemaskini.</p>
+    <div id="lastSaveInfo" style="font-size:11.5px;color:var(--muted);font-weight:600;margin-bottom:.85rem"></div>
+    <div style="display:flex;gap:.6rem;flex-wrap:wrap">
+      <button class="hbtn hbtn-adm" style="padding:9px 18px;font-size:12px" onclick="saveAllData(false)">💾 Simpan Sekarang</button>
+      <button class="hbtn hbtn-out" style="padding:9px 18px;font-size:12px" onclick="resetAllData()">🗑 Reset ke Data Asal</button>
+    </div>
+    <div class="ibox" style="margin-top:1rem">⚠️ <strong>Nota penting:</strong> localStorage tersimpan pada <em>browser/peranti ini sahaja</em>. Jika cache browser dipadam, guru guna peranti lain, atau telefon/komputer ditukar — data localStorage akan hilang. Untuk perlindungan penuh, <strong>muat turun fail sandaran (backup)</strong> secara berkala dan simpan di Google Drive / emel sendiri.</div>
+    <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.85rem">
+      <button class="hbtn hbtn-adm" style="padding:9px 18px;font-size:12px" onclick="exportBackup()">⬇ Muat Turun Sandaran (.json)</button>
+      <button class="hbtn" style="padding:9px 18px;font-size:12px" onclick="document.getElementById('backupFI').click()">⬆ Pulihkan dari Sandaran</button>
+      <input type="file" id="backupFI" accept=".json" style="display:none" onchange="importBackup(event)">
+    </div>
+  </div>
   <div class="ec"><div class="et">📄 Jana Laporan PDF Lengkap</div>
     <label class="eck"><input type="checkbox" id="pdf-s1" checked> Standard 1 — Kepimpinan</label>
     <label class="eck"><input type="checkbox" id="pdf-s2" checked> Standard 2 — Pengurusan</label>
@@ -651,6 +665,74 @@ input[type=file].fi{display:none}
 
 </div><!-- end .main -->
 <script>
+// ══════════════════════════════════════════════
+// SUPABASE CONFIG + TENANT (SEKOLAH)
+// ══════════════════════════════════════════════
+var SB_URL='https://aowzftmdriukxbltjtpm.supabase.co';
+var SB_ANON_KEY='PASTE_ANON_KEY_DI_SINI'; // <-- ganti dengan anon key projek Supabase
+var SB_FN_ADMIN=SB_URL+'/functions/v1/skpm-admin';
+var urlParams=new URLSearchParams(window.location.search);
+var KOD_SEKOLAH=(urlParams.get('t')||'').trim().toUpperCase();
+function sbMakeEmail(username,kodSekolah){
+  var u=(username||'').trim().toLowerCase().replace(/[^a-z0-9_.]/g,'');
+  var k=(kodSekolah||'').trim().toLowerCase().replace(/[^a-z0-9]/g,'');
+  return u+'.'+k+'@cikgukita.internal';
+}
+var SP_SESS=null, SP_CU=null;
+var SP_SKEY='sp_sess_v1_'+(KOD_SEKOLAH||'nokod');
+function loadSPSess(){try{return JSON.parse(localStorage.getItem(SP_SKEY))}catch(e){return null}}
+function saveSPSess(){localStorage.setItem(SP_SKEY,JSON.stringify(SP_SESS))}
+function clearSPSess(){localStorage.removeItem(SP_SKEY)}
+async function sbFetch(path,opts){
+  opts=opts||{};
+  var headers=Object.assign({'apikey':SB_ANON_KEY,'Content-Type':'application/json'},opts.headers||{});
+  headers['Authorization']='Bearer '+((SP_SESS&&SP_SESS.access_token)?SP_SESS.access_token:SB_ANON_KEY);
+  return fetch(SB_URL+path,Object.assign({},opts,{headers:headers}));
+}
+async function spAdmFn(action,payload){
+  var res=await fetch(SB_FN_ADMIN,{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+SP_SESS.access_token,'apikey':SB_ANON_KEY},
+    body:JSON.stringify(Object.assign({action:action},payload||{}))
+  });
+  var d=await res.json();
+  if(!res.ok) throw new Error(d.error||'Ralat pelayan');
+  return d;
+}
+async function spSaveSchoolData(){
+  if(!SP_CU) return;
+  try{
+    await sbFetch('/rest/v1/skpm_school_data?kod_sekolah=eq.'+KOD_SEKOLAH, {
+      method:'PATCH', headers:{'Prefer':'return=minimal'},
+      body: JSON.stringify({school: S.school, fields: {D:D, gs:S.gs, ui:collectUI()}})
+    });
+  }catch(e){}
+}
+async function spLoadSchoolData(){
+  try{
+    var res = await sbFetch('/rest/v1/skpm_school_data?kod_sekolah=eq.'+KOD_SEKOLAH+'&select=school,fields', {method:'GET'});
+    if(res.ok){
+      var rows = await res.json();
+      if(rows.length){
+        if(rows[0].school && Object.keys(rows[0].school).length) Object.assign(S.school, rows[0].school);
+        var f=rows[0].fields;
+        if(f){
+          if(f.D) Object.keys(f.D).forEach(function(y){ D[y]=f.D[y]; });
+          if(f.gs) S.gs=f.gs;
+          if(f.ui) applyUI(f.ui);
+        }
+        return true;
+      } else {
+        await sbFetch('/rest/v1/skpm_school_data', {
+          method:'POST', headers:{'Prefer':'return=minimal'},
+          body: JSON.stringify({kod_sekolah: KOD_SEKOLAH, school: S.school, fields: {}})
+        });
+      }
+    }
+  }catch(e){}
+  return false;
+}
+
 Chart.register(ChartDataLabels);
 const CH={},DLS={id:null};
 window._ROLE='admin';
@@ -702,34 +784,204 @@ function g4(y){const d=D[y].s4;return{...d,avg:mn([d.i41,d.i42,d.i43,d.i44,d.i45
 function g5(y){const d=D[y].s5;return{...d,avg:mn([d.i51,d.i52,d.i53,d.i541,d.i542])}}
 
 /* ── AUTH ── */
-const SK='skpm3_u',SS='skpm3_s';
-function getU(){try{return JSON.parse(localStorage.getItem(SK))||defU()}catch{return defU()}}
-function saveU(u){localStorage.setItem(SK,JSON.stringify(u))}
-function defU(){const u=[{id:'u1',nama:'Administrator',username:'admin',password:'admin123',role:'admin',jawatan:'Pentadbir',email:''},{id:'u2',nama:'Pengguna Demo',username:'demo',password:'demo123',role:'view',jawatan:'Guru',email:''}];saveU(u);return u}
-function getSess(){try{return JSON.parse(sessionStorage.getItem(SS))}catch{return null}}
-function setSess(u){sessionStorage.setItem(SS,JSON.stringify({id:u.id,nama:u.nama,username:u.username,role:u.role,jawatan:u.jawatan}))}
-function clrSess(){sessionStorage.removeItem(SS)}
+// Diurus melalui Supabase Auth (Edge Function skpm-admin), bukan localStorage
 
-function doLogin(){
-  const usr=sv('lf-u').trim(),pw=sv('lf-p');
-  const found=getU().find(u=>u.username===usr&&u.password===pw);
-  if(!found){
+/* ── SIMPAN & MUAT DATA (localStorage) ── */
+const SDK='skpm3_data';
+function collectUI(){
+  const ui={};
+  document.querySelectorAll('[id^="ti-"],[id^="ty-"],[id^="lb-"]').forEach(el=>{ui[el.id]=el.value});
+  return ui;
+}
+function applyUI(ui){
+  if(!ui)return;
+  Object.keys(ui).forEach(id=>{const el=document.getElementById(id);if(el)el.value=ui[id]});
+}
+function saveAllData(silent){
+  try{
+    spSaveSchoolData();
+    updSaveInfo();
+    if(!silent)toastMsg('✅ Data berjaya disimpan (cloud).');
+  }catch(e){
+    if(!silent)toastMsg('❌ Gagal menyimpan: '+e.message,true);
+  }
+}
+function loadAllData(){
+  return D && Object.keys(D).length>0;
+}
+function resetAllData(){
+  if(!confirm('Padam semua data tersimpan dalam localStorage dan kembali kepada data contoh (default)?\n\nTindakan ini tidak boleh diundur.'))return;
+  localStorage.removeItem(SDK);
+  location.reload();
+}
+function updSaveInfo(){
+  const el=document.getElementById('lastSaveInfo');
+  if(!el)return;
+  if(!SP_CU){el.textContent='Belum log masuk.';return}
+  const lb=localStorage.getItem('skpm3_lastbackup');
+  let txt='Data disegerak ke cloud (Supabase)';
+  txt+=lb?' · Sandaran terakhir: '+new Date(parseInt(lb)).toLocaleDateString('ms-MY'):' · Belum pernah muat turun sandaran';
+  el.textContent=txt;
+}
+function checkBackupReminder(){
+  try{
+    const lb=localStorage.getItem('skpm3_lastbackup');
+    const days=lb?(Date.now()-parseInt(lb))/86400000:9999;
+    if(days>14)setTimeout(()=>toastMsg('💡 Dah lebih 2 minggu tak muat turun sandaran. Pergi ke tab Eksport untuk backup fail JSON.'),1500);
+  }catch{}
+}
+function toastMsg(txt,isErr){
+  let m=document.getElementById('saveToast');
+  if(!m){
+    m=document.createElement('div');
+    m.id='saveToast';
+    m.style.cssText='position:fixed;bottom:22px;left:50%;transform:translateX(-50%);color:#fff;padding:11px 22px;border-radius:12px;font-size:12.5px;font-weight:700;z-index:9999;box-shadow:0 10px 30px rgba(0,0,0,.25);font-family:Outfit,sans-serif;letter-spacing:-.1px';
+    document.body.appendChild(m);
+  }
+  m.style.background=isErr?'linear-gradient(135deg,#991B1B,#DC2626)':'linear-gradient(135deg,#065F46,#059669)';
+  m.textContent=txt;m.style.display='block';
+  clearTimeout(window._toastT);
+  window._toastT=setTimeout(()=>{m.style.display='none'},2800);
+}
+function exportBackup(){
+  try{
+    const payload={D:D,school:S.school,gs:S.gs,ui:collectUI(),ts:Date.now(),app:'SKPM Pro',ver:1};
+    const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob);
+    const dstr=new Date().toISOString().slice(0,10);
+    const fname=`SKPM_Pro_Backup_${(S.school.name||'Sekolah').replace(/\s+/g,'_')}_${dstr}.json`;
+    const a=document.createElement('a');a.href=url;a.download=fname;a.click();
+    URL.revokeObjectURL(url);
+    localStorage.setItem('skpm3_lastbackup',Date.now());
+    toastMsg('✅ Fail sandaran dimuat turun. Simpan di Google Drive/emel!');
+  }catch(e){toastMsg('❌ Gagal jana sandaran: '+e.message,true)}
+}
+function importBackup(e){
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    try{
+      const obj=JSON.parse(ev.target.result);
+      if(!obj||typeof obj!=='object')throw new Error('Format fail tidak sah');
+      if(!confirm('Pulihkan data daripada fail sandaran ini?\n\nData semasa akan digantikan dengan kandungan fail: '+f.name))return;
+      if(obj.D)Object.keys(obj.D).forEach(y=>{D[y]=obj.D[y]});
+      if(obj.school)Object.assign(S.school,obj.school);
+      if(obj.gs)S.gs=obj.gs;
+      if(obj.ui)applyUI(obj.ui);
+      syncYearOptions();
+      saveAllData(true);
+      document.getElementById('dispN').textContent=S.school.name;
+      document.getElementById('dispS').textContent=S.school.sub||'Dashboard SKPM Kualiti';
+      if(S.school.logo){const sl=document.getElementById('hdrSL');sl.src=S.school.logo;sl.classList.add('show')}
+      ['s1','s2','s3','s4','s5'].forEach(s=>syncForm(s));
+      rAll();updSaveInfo();
+      toastMsg('✅ Data berjaya dipulihkan dari sandaran!');
+    }catch(err){
+      toastMsg('❌ Fail sandaran tidak sah atau rosak.',true);
+    }finally{
+      e.target.value='';
+    }
+  };
+  r.readAsText(f);
+}
+
+async function spFetchProfile(){
+  try{
+    var res=await sbFetch('/rest/v1/skpm_users?select=username,fullname,role,kod_sekolah,must_change_password&user_id=eq.'+SP_SESS.user_id,{method:'GET'});
+    if(!res.ok) return false;
+    var rows=await res.json();
+    if(!rows.length) return false;
+    SP_CU=rows[0];
+    return true;
+  }catch(e){ return false; }
+}
+async function spRefreshToken(){
+  if(!SP_SESS||!SP_SESS.refresh_token) return false;
+  var res=await sbFetch('/auth/v1/token?grant_type=refresh_token',{method:'POST',body:JSON.stringify({refresh_token:SP_SESS.refresh_token})});
+  if(!res.ok) return false;
+  var d=await res.json();
+  SP_SESS={access_token:d.access_token,refresh_token:d.refresh_token,user_id:d.user.id};
+  saveSPSess();
+  return true;
+}
+async function spBoot(){
+  if(!KOD_SEKOLAH){
+    document.getElementById('lf-err').textContent='URL tiada kod sekolah (?t=KODSEKOLAH). Hubungi admin.';
     document.getElementById('lf-err').style.display='block';
-    ['lf-u','lf-p'].forEach(id=>document.getElementById(id).classList.add('err'));
-    setTimeout(()=>{document.getElementById('lf-err').style.display='none';['lf-u','lf-p'].forEach(id=>document.getElementById(id).classList.remove('err'))},3000);
     return;
   }
-  setSess(found);document.getElementById('loginOverlay').classList.add('gone');applySession(found);
+  SP_SESS=loadSPSess();
+  if(SP_SESS&&SP_SESS.access_token){
+    if(await spFetchProfile()){ if(SP_CU.must_change_password){spForcePwScreen();return;} await spEnterApp(); return; }
+    if(await spRefreshToken()&&await spFetchProfile()){ if(SP_CU.must_change_password){spForcePwScreen();return;} await spEnterApp(); return; }
+  }
+  clearSPSess(); SP_SESS=null; SP_CU=null;
 }
-function doLogout(){if(!confirm('Log keluar?'))return;clrSess();location.reload()}
+async function doLogin(){
+  const usr=sv('lf-u').trim(),pw=sv('lf-p');
+  var errEl=document.getElementById('lf-err');
+  if(!KOD_SEKOLAH){errEl.textContent='URL tiada kod sekolah (?t=KODSEKOLAH).';errEl.style.display='block';return}
+  if(!usr||!pw){errEl.style.display='block';return}
+  var email=sbMakeEmail(usr,KOD_SEKOLAH);
+  try{
+    var res=await sbFetch('/auth/v1/token?grant_type=password',{method:'POST',body:JSON.stringify({email:email,password:pw})});
+    if(!res.ok){
+      errEl.style.display='block';
+      ['lf-u','lf-p'].forEach(id=>document.getElementById(id).classList.add('err'));
+      setTimeout(()=>{errEl.style.display='none';['lf-u','lf-p'].forEach(id=>document.getElementById(id).classList.remove('err'))},3000);
+      return;
+    }
+    var d=await res.json();
+    SP_SESS={access_token:d.access_token,refresh_token:d.refresh_token,user_id:d.user.id};
+    saveSPSess();
+    if(!await spFetchProfile()){errEl.textContent='Akaun wujud tapi profil tidak dijumpai. Hubungi admin.';errEl.style.display='block';return}
+    errEl.style.display='none';
+    if(SP_CU.must_change_password){ spForcePwScreen(); return; }
+    document.getElementById('loginOverlay').classList.add('gone');
+    await spEnterApp();
+  }catch(e){ errEl.style.display='block'; }
+}
+async function spEnterApp(){
+  await spLoadSchoolData();
+  document.getElementById('loginOverlay').classList.add('gone');
+  document.getElementById('dispN').textContent=S.school.name;
+  if(S.school.logo){const sl=document.getElementById('hdrSL');sl.src=S.school.logo;sl.classList.add('show')}
+  document.querySelectorAll('[id^=gs-]').forEach(b=>b.classList.remove('on'));
+  const gsBtn=document.getElementById('gs-'+(S.gs||'bar'));if(gsBtn)gsBtn.classList.add('on');
+  ['s1','s2','s3','s4','s5'].forEach(s=>syncForm(s));
+  rAll();
+  applySession(SP_CU);
+}
+function doLogout(){if(!confirm('Log keluar?'))return;clearSPSess();location.reload()}
 function togglePw(){const i=document.getElementById('lf-p');i.type=i.type==='password'?'text':'password';document.getElementById('lf-eye').textContent=i.type==='password'?'👁':'🙈'}
 function tAPw(){const i=document.getElementById('af-pw');i.type=i.type==='password'?'text':'password'}
+
+function spForcePwScreen(){
+  var scr=document.getElementById('loginOverlay');
+  var card=scr.querySelector('.login-card')||scr.querySelector('div');
+  card.innerHTML='<div style="font-size:17px;font-weight:800;margin-bottom:6px">Set Kata Laluan Baru</div>'+
+    '<div style="font-size:12.5px;color:#64748b;margin-bottom:14px">Kali pertama log masuk — sila tetapkan kata laluan baru.</div>'+
+    '<input id="fpwNew" type="password" placeholder="Kata laluan baru (min. 6 aksara)" style="width:100%;box-sizing:border-box;padding:10px 12px;border-radius:8px;border:1px solid #cbd5e1;margin-bottom:10px">'+
+    '<input id="fpwConf" type="password" placeholder="Sahkan kata laluan" style="width:100%;box-sizing:border-box;padding:10px 12px;border-radius:8px;border:1px solid #cbd5e1;margin-bottom:14px">'+
+    '<button onclick="spForcePwSubmit()" style="width:100%;padding:11px;border:none;border-radius:8px;background:#2563eb;color:#fff;font-weight:700;cursor:pointer">Simpan &amp; Teruskan &rarr;</button>'+
+    '<div id="fpwErr" style="color:#ef4444;font-size:12px;margin-top:8px"></div>';
+}
+async function spForcePwSubmit(){
+  var nw=document.getElementById('fpwNew').value, cf=document.getElementById('fpwConf').value;
+  var err=document.getElementById('fpwErr');
+  if(nw.length<6){err.textContent='Min. 6 aksara.';return}
+  if(nw!==cf){err.textContent='Tidak sepadan.';return}
+  var res=await sbFetch('/auth/v1/user',{method:'PUT',body:JSON.stringify({password:nw})});
+  if(!res.ok){err.textContent='Gagal tukar. Cuba lagi.';return}
+  await sbFetch('/rest/v1/skpm_users?user_id=eq.'+SP_SESS.user_id,{method:'PATCH',headers:{'Prefer':'return=minimal'},body:JSON.stringify({must_change_password:false})});
+  location.reload();
+}
 
 function applySession(u){
   window._ROLE=u.role;
   const ab=document.getElementById('adminBtn');if(ab)ab.style.display=u.role==='admin'?'':'none';
   const sub=document.getElementById('dispS');
-  if(sub)sub.textContent=S.school.sub+' · '+u.nama+' — '+({admin:'👑 Admin',user:'✏ Edit',view:'👁 Tontonan'}[u.role]||'');
+  if(sub)sub.textContent=S.school.sub+' · '+(u.fullname||u.username)+' — '+({admin:'👑 Admin',user:'✏ Edit',view:'👁 Tontonan'}[u.role]||'');
   if(u.role==='view'){
     const b=document.createElement('div');b.className='vo-bar';
     b.innerHTML='👁 <strong>MOD TONTONAN SAHAJA</strong> — Data tidak boleh diedit. Hubungi Admin.';
@@ -762,46 +1014,71 @@ function saveSM(){
   S.school.daerah=sv('m-dr');S.school.kod=sv('m-kd');S.school.pgb=sv('m-pgb');
   S.school.sub=[S.school.jenis,S.school.daerah].filter(Boolean).join(' · ')||'Dashboard SKPM Kualiti';
   document.getElementById('dispN').textContent=S.school.name;
-  const sess=getSess();const sub=document.getElementById('dispS');
-  if(sub&&sess)sub.textContent=S.school.sub+' · '+sess.nama+' — '+({admin:'👑 Admin',user:'✏ Edit',view:'👁 Tontonan'}[sess.role]||'');
+  const sub=document.getElementById('dispS');
+  if(sub&&SP_CU)sub.textContent=S.school.sub+' · '+(SP_CU.fullname||SP_CU.username)+' — '+({admin:'👑 Admin',user:'✏ Edit',view:'👁 Tontonan'}[SP_CU.role]||'');
   closeSM();
+  saveAllData(true);
 }
-function handleLogo(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{S.school.logo=ev.target.result;document.getElementById('logoPH').style.display='none';const i=document.getElementById('logoPV');i.src=ev.target.result;i.style.display='block';document.getElementById('logoRM').style.display='block';const sl=document.getElementById('hdrSL');sl.src=ev.target.result;sl.classList.add('show')};r.readAsDataURL(f)}
-function rmLogo(){S.school.logo=null;document.getElementById('logoPH').style.display='';const i=document.getElementById('logoPV');i.src='';i.style.display='none';document.getElementById('logoRM').style.display='none';document.getElementById('logoFI').value='';const sl=document.getElementById('hdrSL');sl.src='';sl.classList.remove('show')}
+function handleLogo(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{S.school.logo=ev.target.result;document.getElementById('logoPH').style.display='none';const i=document.getElementById('logoPV');i.src=ev.target.result;i.style.display='block';document.getElementById('logoRM').style.display='block';const sl=document.getElementById('hdrSL');sl.src=ev.target.result;sl.classList.add('show');saveAllData(true)};r.readAsDataURL(f)}
+function rmLogo(){S.school.logo=null;document.getElementById('logoPH').style.display='';const i=document.getElementById('logoPV');i.src='';i.style.display='none';document.getElementById('logoRM').style.display='none';document.getElementById('logoFI').value='';const sl=document.getElementById('hdrSL');sl.src='';sl.classList.remove('show');saveAllData(true)}
 
 /* ── ADMIN PANEL ── */
 function openAP(){if(window._ROLE!=='admin'){alert('Akses Admin sahaja!');return}renderUL();document.getElementById('adminMod').classList.add('open')}
 function closeAP(){document.getElementById('adminMod').classList.remove('open');clearAF()}
-function renderUL(){
-  const users=getU(),sess=getSess();
-  document.getElementById('uList').innerHTML=users.map(u=>`
+async function renderUL(){
+  const el=document.getElementById('uList');
+  el.innerHTML='<div style="font-size:11px;color:#94a3b8">Memuatkan...</div>';
+  try{
+    var d=await spAdmFn('list_users');
+    window._SP_USERLIST=d.users;
+    el.innerHTML=d.users.map(u=>`
     <div class="urow ${u.role==='admin'?'uad':''}">
       <div class="uic">${u.role==='admin'?'👑':u.role==='view'?'👁':'✏'}</div>
-      <div class="uinf"><div class="unm">${u.nama}<span class="rbadge ${u.role==='admin'?'rb-a':u.role==='view'?'rb-v':'rb-u'}">${u.role==='admin'?'Admin':u.role==='view'?'Tontonan':'Pengguna'}</span></div>
-      <div class="url">@${u.username}${u.jawatan?' · '+u.jawatan:''}</div></div>
+      <div class="uinf"><div class="unm">${u.fullname||u.username}<span class="rbadge ${u.role==='admin'?'rb-a':u.role==='view'?'rb-v':'rb-u'}">${u.role==='admin'?'Admin':u.role==='view'?'Tontonan':'Pengguna'}</span></div>
+      <div class="url">@${u.username}${u.must_change_password?' · <span style="color:#f59e0b">belum set pasword</span>':''}</div></div>
       <div class="ubts">
-        <button class="ubtn ubtn-e" onclick="editUser('${u.id}')">✏</button>
-        <button class="ubtn ubtn-d" onclick="delUser('${u.id}')" ${u.id===sess?.id?'disabled':''}>${u.id===sess?.id?'🔒':'🗑'}</button>
+        <button class="ubtn ubtn-e" onclick="editUser('${u.username}')">✏</button>
+        <button class="ubtn ubtn-d" onclick="delUser('${u.username}')" ${u.username===SP_CU?.username?'disabled':''}>${u.username===SP_CU?.username?'🔒':'🗑'}</button>
       </div>
     </div>`).join('')
+  }catch(e){ el.innerHTML='<div style="color:#ef4444;font-size:11px">Ralat: '+e.message+'</div>'; }
 }
-function saveUser(){
-  const nm=sv('af-nm'),us=sv('af-us'),pw=sv('af-pw'),rl=sv('af-rl'),jw=sv('af-jw'),em=sv('af-em'),ed=sv('af-ed');
+async function saveUser(){
+  const nm=sv('af-nm'),us=sv('af-us'),rl=sv('af-rl'),jw=sv('af-jw'),em=sv('af-em'),ed=sv('af-ed');
   if(!nm||!us){showAM('❌ Nama dan username wajib.','ap-er');return}
-  let u=getU();
-  if(u.find(x=>x.username===us&&x.id!==ed)){showAM('❌ Username sudah digunakan.','ap-er');return}
-  if(ed){const i=u.findIndex(x=>x.id===ed);if(i!==-1){u[i]={...u[i],nama:nm,username:us,role:rl,jawatan:jw,email:em};if(pw)u[i].password=pw}showAM('✅ Pengguna dikemaskini!','ap-ok')}
-  else{if(!pw){showAM('❌ Kata laluan wajib untuk pengguna baru.','ap-er');return}u.push({id:'u'+Date.now(),nama:nm,username:us,password:pw,role:rl,jawatan:jw,email:em});showAM('✅ Pengguna ditambah!','ap-ok')}
-  saveU(u);renderUL();clearAF();
+  try{
+    if(ed){
+      await spAdmFn('update_user',{username:ed,fullname:nm,role:rl});
+      showAM('✅ Pengguna dikemaskini!','ap-ok');
+      await renderUL();clearAF();
+    } else {
+      var d=await spAdmFn('create_user',{username:us,fullname:nm,role:rl});
+      showAM('✅ Pengguna ditambah!','ap-ok');
+      await renderUL();clearAF();
+      alert('Akaun "'+d.username+'" dicipta.\n\nKata laluan sementara: '+d.password+'\n\nBeri kepada pengguna — wajib tukar pasword bila log masuk kali pertama.');
+    }
+  }catch(e){ showAM('❌ '+e.message,'ap-er'); }
 }
-function editUser(id){const u=getU().find(x=>x.id===id);if(!u)return;document.getElementById('af-nm').value=u.nama;document.getElementById('af-us').value=u.username;document.getElementById('af-pw').value='';document.getElementById('af-rl').value=u.role;document.getElementById('af-jw').value=u.jawatan||'';document.getElementById('af-em').value=u.email||'';document.getElementById('af-ed').value=u.id;document.getElementById('apSB').textContent='💾 Kemaskini Pengguna'}
-function delUser(id){if(!confirm('Padam pengguna ini?'))return;const s=getSess();if(id===s?.id){alert('Tidak boleh padam akaun sendiri!');return}saveU(getU().filter(u=>u.id!==id));renderUL();showAM('✅ Pengguna dipadam.','ap-ok')}
-function clearAF(){['af-nm','af-us','af-pw','af-jw','af-em'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});document.getElementById('af-rl').value='user';document.getElementById('af-ed').value='';document.getElementById('apSB').textContent='💾 Simpan Pengguna'}
+function editUser(username){
+  const u=(window._SP_USERLIST||[]).find(x=>x.username===username);if(!u)return;
+  document.getElementById('af-nm').value=u.fullname||'';
+  document.getElementById('af-us').value=u.username;
+  document.getElementById('af-rl').value=u.role;
+  document.getElementById('af-ed').value=u.username;
+  document.getElementById('apSB').textContent='💾 Kemaskini Pengguna'
+}
+async function delUser(username){
+  if(!confirm('Padam pengguna ini?'))return;
+  if(username===SP_CU?.username){alert('Tidak boleh padam akaun sendiri!');return}
+  try{ await spAdmFn('delete_user',{username:username}); await renderUL(); showAM('✅ Pengguna dipadam.','ap-ok'); }
+  catch(e){ showAM('❌ '+e.message,'ap-er'); }
+}
+function clearAF(){['af-nm','af-us','af-jw','af-em'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});document.getElementById('af-rl').value='user';document.getElementById('af-ed').value='';document.getElementById('apSB').textContent='💾 Simpan Pengguna'}
 function showAM(txt,cls){const e=document.getElementById('apMsg');e.textContent=txt;e.className='ap-msg '+cls;e.style.display='block';setTimeout(()=>e.style.display='none',3500)}
 
 /* ── NAV ── */
 function sp(page,el){document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));document.querySelectorAll('.tn').forEach(t=>t.classList.remove('on'));document.getElementById('pg-'+page).classList.add('on');el.classList.add('on');window.scrollTo({top:0,behavior:'smooth'})}
-function setGS(s,btn){S.gs=s;document.querySelectorAll('[id^=gs-]').forEach(b=>b.classList.remove('on'));btn.classList.add('on');rAll()}
+function setGS(s,btn){S.gs=s;document.querySelectorAll('[id^=gs-]').forEach(b=>b.classList.remove('on'));btn.classList.add('on');rAll();saveAllData(true)}
 
 /* ── 3D ── */
 const p3D={id:'p3D',afterDatasetsDraw(c){if(!c._3D)return;const{ctx}=c;c.data.datasets.forEach((ds,di)=>{c.getDatasetMeta(di).data.forEach(bar=>{const{x,y,width,height}=bar;if(!width||!height)return;const d=6,a=.4,bc=ds.backgroundColor,col=Array.isArray(bc)?bc[0]||'#5B21B6':bc||'#5B21B6';ctx.save();ctx.beginPath();ctx.moveTo(x-width/2,y);ctx.lineTo(x-width/2+d,y-d*a);ctx.lineTo(x+width/2+d,y-d*a);ctx.lineTo(x+width/2,y);ctx.closePath();ctx.fillStyle=lco(col,.22);ctx.fill();ctx.beginPath();ctx.moveTo(x+width/2,y);ctx.lineTo(x+width/2+d,y-d*a);ctx.lineTo(x+width/2+d,y+height-d*a);ctx.lineTo(x+width/2,y+height);ctx.closePath();ctx.fillStyle=dko(col,.15);ctx.fill();ctx.restore()})})}};
@@ -873,6 +1150,62 @@ function saveRender(std){
   if(std==='s3'){['s31','s32','s33'].forEach(sub=>{if(!D[yr][sub])D[yr][sub]={};FM[sub].forEach(k=>{const el=document.getElementById('f-'+sub+'-'+k);if(el)D[yr][sub][k]=parseFloat(el.value)||0})});rS3()}
   else{if(!D[yr][std])D[yr][std]={};FM[std].forEach(k=>{const el=document.getElementById('f-'+std+'-'+k);if(el)D[yr][std][k]=parseFloat(el.value)||0});({'s1':rS1,'s2':rS2,'s4':rS4,'s5':rS5})[std]?.()}
   rOV();
+  saveAllData(true);
+}
+
+/* ── TAMBAH TAHUN ── */
+function syncYearOptions(){
+  const yrs=Object.keys(D).map(Number).sort((a,b)=>a-b);
+  document.querySelectorAll('.yr-sel').forEach(sel=>{
+    const cur=parseInt(sel.value);
+    sel.innerHTML=yrs.map(y=>`<option value="${y}">${y}</option>`).join('');
+    sel.value=yrs.includes(cur)?cur:yrs[yrs.length-1];
+  });
+}
+function addYearPrompt(){
+  const input=prompt('Masukkan tahun baru (cth: 2026):');
+  if(input===null)return;
+  const yr=parseInt(input.trim());
+  if(!yr||yr<1900||yr>2100){toastMsg('⚠️ Sila masukkan tahun yang sah.',true);return}
+  if(D[yr]){toastMsg('⚠️ Tahun '+yr+' sudah wujud.',true);return}
+  addYear(yr);
+}
+function addYear(yr){
+  const years=Object.keys(D).map(Number).sort((a,b)=>a-b);
+  const latest=years[years.length-1];
+  const src=D[latest]||{};
+  const clone={};
+  Object.keys(FM).forEach(std=>{
+    clone[std]={};
+    FM[std].forEach(k=>{clone[std][k]=src[std]?.[k]??0});
+  });
+  D[yr]=clone;
+  syncYearOptions();
+  document.querySelectorAll('.yr-sel').forEach(sel=>sel.value=yr);
+  ['s1','s2','s3','s4','s5'].forEach(std=>syncForm(std));
+  rAll();
+  saveAllData(true);
+  toastMsg('✅ Tahun '+yr+' berjaya ditambah (data disalin daripada tahun '+latest+' sebagai titik mula).');
+}
+function delYearPrompt(){
+  const years=Object.keys(D).map(Number).sort((a,b)=>a-b);
+  if(years.length<=1){toastMsg('⚠️ Sekurang-kurangnya satu tahun diperlukan — tidak boleh padam.',true);return}
+  const input=prompt('Tahun mana yang nak dipadam?\n\nTahun sedia ada: '+years.join(', '));
+  if(input===null)return;
+  const yr=parseInt(input.trim());
+  if(!yr||!D[yr]){toastMsg('⚠️ Tahun '+input+' tidak wujud dalam data.',true);return}
+  delYear(yr);
+}
+function delYear(yr){
+  const years=Object.keys(D).map(Number).sort((a,b)=>a-b);
+  if(years.length<=1){toastMsg('⚠️ Sekurang-kurangnya satu tahun diperlukan — tidak boleh padam.',true);return}
+  if(!confirm('Padam semua data tahun '+yr+'?\n\nTindakan ini tidak boleh diundur.'))return;
+  delete D[yr];
+  syncYearOptions();
+  ['s1','s2','s3','s4','s5'].forEach(std=>syncForm(std));
+  rAll();
+  saveAllData(true);
+  toastMsg('✅ Tahun '+yr+' berjaya dipadam.');
 }
 
 /* ── RENDER OVERVIEW ── */
@@ -895,7 +1228,7 @@ function rOV(){
   if(rt==='radar'){bc('ovR','radar',['Std 1','Std 2','Std 3','Std 4','Std 5'],[{label:`Skor ${yr}`,data:allV,backgroundColor:'rgba(91,33,182,.15)',borderColor:'#5B21B6',borderWidth:2.5,pointBackgroundColor:'#5B21B6',pointRadius:6,pointBorderColor:'#fff',pointBorderWidth:2}],{dlMode:lv('ovR'),legId:'lg-ovR',legLabels:[`Skor ${yr}`],legColors:['#5B21B6']})}
   else bc('ovR',rt,['S1 Kepimpinan','S2 Pengurusan','S3 Program','S4 PdPc','S5 Kemenjadian'],[{label:`Skor ${yr}`,data:allV,backgroundColor:P.all,borderRadius:8,borderWidth:2,borderColor:'rgba(255,255,255,.35)'}],{dlMode:lv('ovR'),max:100,legId:'lg-ovR',legLabels:cards.map(c=>c.name),legColors:P.all});
 
-  const yrs=[2023,2024,2025],tt=tv('ovT');
+  const yrs=Object.keys(D).map(Number).sort((a,b)=>a-b),tt=tv('ovT');
   const tDS=cards.map((c,i)=>({label:c.lbl,data:yrs.map(y=>{const a=[g1(y),g2(y),[g31(y),g32(y),g33(y)],g4(y),g5(y)];return parseFloat((i===2?mn([a[2][0].avg,a[2][1].avg,a[2][2].avg]):a[i].avg).toFixed(2))}).map(Number),borderColor:c.c,backgroundColor:tt==='line'?c.c.replace(/$/,'18'):''+c.c,fill:false,tension:.4,pointRadius:5,pointBackgroundColor:c.c,pointBorderColor:'#fff',pointBorderWidth:2,borderRadius:6,borderWidth:2.5}));
   bc('ovT',tt,yrs.map(String),tDS,{dlMode:Array(5).fill(lv('ovT')),max:100,legId:'lg-ovT',legLabels:cards.map(c=>c.name),legColors:P.all});
 
@@ -907,11 +1240,11 @@ function rOV(){
 
 /* ── S1 ── */
 function rS1(){
-  const yr=parseInt(sv('yr-s1')||'2024');syncForm('s1');
+  const yr=parseInt(sv('yr-s1')||'2024');
   const d=g1(yr);
   mkMR('mr-s1',[{label:'Skor S1',value:d.avg.toFixed(1),color:'#4C1D95',sub:slbl(d.avg)},{label:'1.1 Peneraju',value:d.i11.toFixed(1),color:'#6D28D9'},{label:'1.2 Pembimbing',value:d.i12.toFixed(1),color:'#7C3AED'},{label:'1.3 Pendorong',value:d.i13.toFixed(1),color:'#4C1D95'}]);
   bc('s1B',tv('s1B'),['1.1 Peneraju','1.2 Pembimbing','1.3 Pendorong'],[{label:'Skor',data:[d.i11,d.i12,d.i13],backgroundColor:P.v,borderRadius:9,borderWidth:2,borderColor:'rgba(255,255,255,.35)'}],{dlMode:lv('s1B'),max:100,legId:'lg-s1B',legLabels:['1.1','1.2','1.3'],legColors:P.v});
-  const tt=tv('s1T'),yrs=[2023,2024,2025];
+  const tt=tv('s1T'),yrs=Object.keys(D).map(Number).sort((a,b)=>a-b);
   bc('s1T',tt,yrs.map(String),[
     {label:'1.1 Peneraju',data:yrs.map(y=>D[y].s1.i11),borderColor:'#4C1D95',backgroundColor:'rgba(76,29,149,.08)',fill:tt==='line',tension:.4,pointRadius:5,pointBackgroundColor:'#4C1D95',pointBorderColor:'#fff',pointBorderWidth:2,borderRadius:6,borderWidth:2.5},
     {label:'1.2 Pembimbing',data:yrs.map(y=>D[y].s1.i12),borderColor:'#6D28D9',backgroundColor:'rgba(109,40,217,.08)',fill:tt==='line',tension:.4,pointRadius:5,pointBackgroundColor:'#6D28D9',pointBorderColor:'#fff',pointBorderWidth:2,borderRadius:6,borderWidth:2.5},
@@ -922,7 +1255,7 @@ function rS1(){
 
 /* ── S2 ── */
 function rS2(){
-  const yr=parseInt(sv('yr-s2')||'2024');syncForm('s2');
+  const yr=parseInt(sv('yr-s2')||'2024');
   const d=g2(yr);
   mkMR('mr-s2',[{label:'Skor S2',value:d.avg.toFixed(1),color:'#1E3A8A',sub:slbl(d.avg)},{label:'2.1 Sumber Manusia',value:d.i21.toFixed(1),color:'#1D4ED8'},{label:'2.5 Iklim',value:d.i25.toFixed(1),color:'#2563EB'},{label:'2.6 Perpaduan',value:d.i26.toFixed(1),color:'#1E3A8A'}]);
   const labs=['2.1 Sumber Manusia','2.2 Aset','2.3 Kewangan','2.4 Sumber Pend.','2.5 Iklim','2.6 Perpaduan','2.7 Permuafakatan'];
@@ -933,7 +1266,7 @@ function rS2(){
 
 /* ── S3 ── */
 function rS3(){
-  const yr=parseInt(sv('yr-s3')||'2024');syncForm('s3');
+  const yr=parseInt(sv('yr-s3')||'2024');
   const d31=g31(yr),d32=g32(yr),d33=g33(yr),s3=mn([d31.avg,d32.avg,d33.avg]);
   mkMR('mr-s3',[{label:'Skor 3.1',value:d31.avg.toFixed(1),color:'#064E3B',sub:slbl(d31.avg)},{label:'Skor 3.2',value:d32.avg.toFixed(1),color:'#065F46'},{label:'Skor 3.3',value:d33.avg.toFixed(1),color:'#059669'},{label:'Avg S3',value:s3.toFixed(1),color:'#064E3B',sub:'Keseluruhan'}]);
   bc('s31B',tv('s31B'),['3.1.1 Pelaksanaan','3.1.2 Mata Pelajaran','3.1.3 Masa Instruk.','3.1.4 Penilaian'],[{label:'Skor 3.1',data:[d31.i311,d31.i312,d31.i313,d31.i314],backgroundColor:P.g,borderRadius:8,borderWidth:2,borderColor:'rgba(255,255,255,.35)'}],{dlMode:lv('s31B'),max:100,legId:'lg-s31B',legLabels:['3.1.1','3.1.2','3.1.3','3.1.4'],legColors:P.g});
@@ -945,7 +1278,7 @@ function rS3(){
 
 /* ── S4 ── */
 function rS4(){
-  const yr=parseInt(sv('yr-s4')||'2024');syncForm('s4');
+  const yr=parseInt(sv('yr-s4')||'2024');
   const d=g4(yr);
   mkMR('mr-s4',[{label:'Skor S4',value:d.avg.toFixed(1),color:'#78350F',sub:slbl(d.avg)},{label:'4.1 Perancang',value:d.i41.toFixed(1),color:'#B45309'},{label:'4.6 Murid Aktif',value:d.i46.toFixed(1),color:'#D97706'},{label:'4.3 Pembimbing',value:d.i43.toFixed(1),color:'#78350F'}]);
   const labs=['4.1 Perancang','4.2 Pengawal','4.3 Pembimbing','4.4 Pendorong','4.5 Penilai','4.6 Murid Aktif'];
@@ -956,7 +1289,7 @@ function rS4(){
 
 /* ── S5 ── */
 function rS5(){
-  const yr=parseInt(sv('yr-s5')||'2024');syncForm('s5');
+  const yr=parseInt(sv('yr-s5')||'2024');
   const d=g5(yr);
   mkMR('mr-s5',[{label:'Skor S5',value:d.avg.toFixed(1),color:'#7F1D1D',sub:slbl(d.avg)},{label:'5.1 Akademik',value:d.i51.toFixed(1),color:'#B91C1C'},{label:'5.4.1 Guru',value:d.i541.toFixed(1),color:'#DC2626'},{label:'5.4.2 Sekolah',value:d.i542.toFixed(1),color:'#7F1D1D'}]);
   const l5=['5.1 Akademik','5.2 Kokurikulum','5.3 Sahsiah','5.4.1 Guru','5.4.2 Sekolah'];
@@ -988,7 +1321,20 @@ function dlCSV(){
 function dlPDF(){
   const ch=CH[DLS.id];if(!ch)return;const title=gt(DLS.id)||DLS.id;
   const lh=S.school.logo?`<img src="${S.school.logo}" style="width:48px;height:48px;border-radius:50%;object-fit:cover;margin-right:12px;border:2px solid #A78BFA">`:' <span style="font-size:28px;margin-right:12px">⭐</span>';
-  const h=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${title}</title><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&display=swap" rel="stylesheet"><style>body{font-family:Outfit,sans-serif;margin:36px;color:#0D0D14}.hdr{border-bottom:3px solid #5B21B6;padding-bottom:12px;margin-bottom:24px;display:flex;align-items:center}h1{font-size:16px;font-weight:800;margin:0}p{font-size:11px;color:#8888A0;margin:4px 0 0}img.ci{max-width:100%;border-radius:12px;border:1px solid rgba(0,0,0,.08);box-shadow:0 4px 16px rgba(0,0,0,.06)}</style></head><body><div class="hdr">${lh}<div><h1>${S.school.name}</h1><p>SKPM Pro · ${title} · ${new Date().toLocaleDateString('ms-MY',{day:'2-digit',month:'long',year:'numeric'})}</p></div></div><img class="ci" src="${ch.toBase64Image()}"></body></html>`;
+  const h=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${title}</title><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&display=swap" rel="stylesheet"><style>body{font-family:Outfit,sans-serif;margin:36px;color:#0D0D14}.hdr{border-bottom:3px solid #5B21B6;padding-bottom:12px;margin-bottom:24px;display:flex;align-items:center}h1{font-size:16px;font-weight:800;margin:0}p{font-size:11px;color:#8888A0;margin:4px 0 0}img.ci{max-width:100%;border-radius:12px;border:1px solid rgba(0,0,0,.08);box-shadow:0 4px 16px rgba(0,0,0,.06)}</style></head><body><div class="hdr">${lh}<div><h1>${S.school.name}</h1><p>SKPM Pro · ${title} · ${new Date().toLocaleDateString('ms-MY',{day:'2-digit',month:'long',year:'numeric'})}</p></div></div><img class="ci" src="${ch.toBase64Image()}"><script>
+// ── KEEP-ALIVE — pastikan Supabase tidak tidur ──────────────
+(function(){
+  var _kaUrl = typeof SUPA_URL !== 'undefined' ? SUPA_URL : (typeof SB_URL !== 'undefined' ? SB_URL : '');
+  var _kaKey = typeof SUPA_KEY !== 'undefined' ? SUPA_KEY : (typeof SB_KEY !== 'undefined' ? SB_KEY : '');
+  if (!_kaUrl || !_kaKey) return;
+  if (window._ekKaTimer) clearInterval(window._ekKaTimer);
+  window._ekKaTimer = setInterval(function(){
+    fetch(_kaUrl+'/rest/v1/', {headers:{'apikey':_kaKey,'Authorization':'Bearer '+_kaKey}}).catch(function(){});
+  }, 4*60*1000);
+  console.log('EduKit keep-alive started');
+})();
+</script>
+</body></html>`;
   const w=window.open('','_blank');w.document.write(h);w.document.close();setTimeout(()=>w.print(),700);closeDL();
 }
 
@@ -1050,10 +1396,17 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('loginBtn')?.addEventListener('click',doLogin);
   document.getElementById('lf-p')?.addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
   document.getElementById('lf-u')?.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('lf-p').focus()});
-  const sess=getSess();
-  if(sess){document.getElementById('loginOverlay').classList.add('gone');applySession(sess)}
+  syncYearOptions();
+  document.getElementById('dispN').textContent=S.school.name;
+  document.getElementById('dispS').textContent=S.school.sub||'Dashboard SKPM Kualiti';
+  if(S.school.logo){const sl=document.getElementById('hdrSL');sl.src=S.school.logo;sl.classList.add('show')}
+  document.querySelectorAll('[id^=gs-]').forEach(b=>b.classList.remove('on'));
+  const gsBtn=document.getElementById('gs-'+(S.gs||'bar'));if(gsBtn)gsBtn.classList.add('on');
   ['s1','s2','s3','s4','s5'].forEach(s=>syncForm(s));
   rAll();
+  updSaveInfo();
+  checkBackupReminder();
+  spBoot();
 });
 </script>
 </body>
