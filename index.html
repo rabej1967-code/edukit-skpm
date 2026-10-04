@@ -892,7 +892,7 @@ function importBackup(e){
 
 async function spFetchProfile(){
   try{
-    var res=await sbFetch('/rest/v1/skpm_users?select=username,fullname,role,kod_sekolah,must_change_password&user_id=eq.'+SP_SESS.user_id,{method:'GET'});
+    var res=await sbFetch('/rest/v1/skpm_users?select=username,fullname,role,must_change_password&user_id=eq.'+SP_SESS.user_id,{method:'GET'});
     if(!res.ok) return false;
     var rows=await res.json();
     if(!rows.length) return false;
